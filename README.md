@@ -2,6 +2,16 @@
 
 ## What's this
 
+Here is a framework of bungee/bukkit and standard application.
+
+Using this framework. You can:
+- Building commands with link calling.
+- Loading/Saving your configuration anywhere.
+- Template support!
+- Regex Replacer. in `RegexUtils`
+
+## How to use
+
 First, add our repository (https://raw.githubusercontent.com/Karlatemp/karlatemp-repo/master/)
 into your repositories 
 
