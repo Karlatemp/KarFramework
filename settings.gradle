@@ -9,4 +9,16 @@
 rootProject.name = 'kar-framework'
 include(':common')
 include(':bukkit')
+
+({
+    def nms = new File(rootProject.projectDir, "bukkit/nms")
+    nms.listFiles().each { dir ->
+        if (dir.isDirectory()) {
+            def name = ':bukkit-nms-' + dir.name.replace('.', '_')
+            include(name)
+            project(name).projectDir = dir
+        }
+    }
+})()
+
 include(':bungee')

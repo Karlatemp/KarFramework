@@ -16,7 +16,7 @@ plugins {
 
 allprojects {
     group 'io.github.karlatemp.kar-framework'
-    version '1.0.1'
+    version '1.1.0'
 }
 allprojects {
     repositories {
@@ -29,6 +29,10 @@ allprojects {
         maven {
             name = 'SpigotMC'
             url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        }
+        maven {
+            name = 'CodeMC - NMS'
+            url = 'https://repo.codemc.io/repository/nms/'
         }
     }
 }
@@ -43,6 +47,9 @@ subprojects {
             compile "org.spongepowered:configurate-hocon:$configurationVersion"
             compile "org.spongepowered:configurate-gson:$configurationVersion"
             compile "org.spongepowered:configurate-yaml:$configurationVersion"
+            if (project.name.startsWith("bukkit-nms")) {
+                compile project(':bukkit')
+            }
         }
     }
 }
@@ -62,13 +69,13 @@ shadowJar {
             case "net.md-5":
             case "commons-lang":
             case "io.netty":
+            case "org.spigotmc":
                 return true
         }
         switch (dep.moduleGroup + ':' + dep.moduleName) {
             case "com.google.code.gson:gson":
             case "com.google.guava:guava":
             case "com.googlecode.json-simple:json-simple":
-            case "org.spigotmc:spigot-api":
             case "junit:junit":
             case "org.hamcrest:hamcrest-core":
             case "se.llbit:jo-nbt":
@@ -88,7 +95,7 @@ jar {
     def mkpom = new File("G:\\KarlatempRepo\\mkpom.gradle")
     if (mkpom.isFile()) {
         extensions.add("pomFilter", { dep ->
-            if(dep.group == "org.spigotmc" || dep.group == "net.md-5") {
+            if (dep.group == "org.spigotmc" || dep.group == "net.md-5") {
                 return false
             }
             return true
