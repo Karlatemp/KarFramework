@@ -10,6 +10,8 @@ package io.github.karlatemp.karframework.internal;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ListUtils {
@@ -17,5 +19,17 @@ public class ListUtils {
         if (index < 0) return null;
         if (index < list.size()) return list.get(index);
         return null;
+    }
+
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        return toList(iterable.iterator());
+    }
+
+    public static <T> List<T> toList(Iterator<T> iterator) {
+        ArrayList<T> result = new ArrayList<>();
+        while (iterator.hasNext()) {
+            result.add(iterator.next());
+        }
+        return result;
     }
 }

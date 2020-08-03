@@ -62,6 +62,10 @@ public class CommandTree<T> implements ICommandNode<T> {
         );
     }
 
+    public CommandTree(@NotNull ICommandFramework<T> framework, @NotNull String name) {
+        this(framework, name, null, null);
+    }
+
     public CommandTree(
             @NotNull ICommandFramework<T> framework,
             @NotNull String name,
@@ -126,6 +130,12 @@ public class CommandTree<T> implements ICommandNode<T> {
             @NotNull LinkedList<@NotNull String> arguments,
             @Unmodifiable @NotNull List<@NotNull String> sourceArguments
     ) throws InterruptCommand {
+        if (parent == null) {
+            if (!framework.hasPermission(sender, permission)) {
+                framework.sendTranslate(sender, "kframe.command.permission-denied");
+                return;
+            }
+        }
         String first = arguments.pollFirst();
         if (first == null || first.equals("?")) {
             FormatAction translate = framework.getTranslate("kframe.command.help.line");
@@ -183,23 +193,26 @@ public class CommandTree<T> implements ICommandNode<T> {
         if (command == null) command = subAlias.get(token);
         if (command == null) {
             String path;
+            String prev;
             if (arguments.isEmpty()) {
                 path = String.join(" ", sourceArguments);
+                prev = String.join(" ", sourceArguments.subList(0, sourceArguments.size() - 1));
             } else {
-                path = String.join(" ", sourceArguments.subList(0, sourceArguments.size() - 1 - arguments.size()));
+                path = String.join(" ", sourceArguments.subList(0, sourceArguments.size() - arguments.size()));
+                prev = String.join(" ", sourceArguments.subList(0, sourceArguments.size() - arguments.size() - 1));
             }
             if (distances == null) {
                 framework.sendTranslate(
                         sender,
                         "kframe.command.unknown-command",
-                        token
+                        path
                 );
             } else {
                 final List<String> list = distances.computeIfAbsent(token, distancesFinder);
                 FormatAction meatLine = framework.getTranslate("kframe.command.unknown-command-meat.line");
-                framework.sendTranslate(sender, "kframe.command.unknown-command-meat.no-command", token);
+                framework.sendTranslate(sender, "kframe.command.unknown-command-meat.no-command", path);
                 for (String like : list) {
-                    framework.sendTranslate(sender, meatLine, like);
+                    framework.sendTranslate(sender, meatLine, prev, like);
                 }
             }
             return;

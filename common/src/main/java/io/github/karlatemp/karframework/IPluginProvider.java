@@ -31,6 +31,11 @@ public interface IPluginProvider {
     ) {
         return ConfigurationFactory.loadConfiguration(this, path);
     }
+    default @Nullable ConfigurationLoader<? extends ConfigurationNode> loadConfiguration(
+            @NotNull String resourcePath, @NotNull String filePath
+    ) {
+        return ConfigurationFactory.loadConfiguration(this, resourcePath, filePath);
+    }
 
     default @NotNull ConfigurationNode loadConfiguration(@NotNull ConfigurationLoader<? extends ConfigurationNode> loader) {
         return ConfigurationFactory.loadConfiguration(this, loader);

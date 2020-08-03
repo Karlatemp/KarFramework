@@ -11,6 +11,7 @@ package io.github.karlatemp.karframework.internal;
 import com.google.common.io.Files;
 import io.github.karlatemp.karframework.IPluginProvider;
 import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.gson.GsonConfigurationLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -24,22 +25,35 @@ import java.util.logging.Level;
 
 public class ConfigurationFactory {
 
-
-    @SuppressWarnings("UnstableApiUsage")
     @Contract()
     public static ConfigurationLoader<? extends ConfigurationNode> loadConfiguration(
             @NotNull IPluginProvider pluginProvider,
             @NotNull String path
     ) {
-        File file = new File(pluginProvider.getPluginDataFolder(), path);
-        FileExecutions.store(pluginProvider, file, path, false);
-        String type = Files.getFileExtension(path);
+        return loadConfiguration(pluginProvider, path, path);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    @Contract()
+    public static ConfigurationLoader<? extends ConfigurationNode> loadConfiguration(
+            @NotNull IPluginProvider pluginProvider,
+            @NotNull String resourcePath, @NotNull String filePath
+    ) {
+        File file = new File(pluginProvider.getPluginDataFolder(), filePath);
+        FileExecutions.store(pluginProvider, file, resourcePath, false);
+        String type = Files.getFileExtension(resourcePath);
+        if (!type.equals(Files.getFileExtension(filePath))) {
+            throw new AssertionError("File resource type not match with resource type.");
+        }
         ConfigurationLoader<? extends ConfigurationNode> loader;
         switch (type) {
             case "conf": {
                 // HOCON
                 loader = HoconConfigurationLoader.builder()
                         .setFile(file)
+                        .setDefaultOptions(ConfigurationOptions.defaults()
+                                .setShouldCopyDefaults(true)
+                        )
                         .build();
                 break;
             }
@@ -48,6 +62,9 @@ public class ConfigurationFactory {
                 // YAML
                 loader = YAMLConfigurationLoader.builder()
                         .setFile(file)
+                        .setDefaultOptions(ConfigurationOptions.defaults()
+                                .setShouldCopyDefaults(true)
+                        )
                         .setIndent(2)
                         .build();
                 break;
@@ -56,6 +73,9 @@ public class ConfigurationFactory {
             case "json": {
                 loader = GsonConfigurationLoader.builder()
                         .setFile(file)
+                        .setDefaultOptions(ConfigurationOptions.defaults()
+                                .setShouldCopyDefaults(true)
+                        )
                         .setIndent(2)
                         .setLenient(false)
                         .build();
@@ -72,7 +92,7 @@ public class ConfigurationFactory {
             } catch (IOException ioException) {
                 pluginProvider.getLogger().log(Level.WARNING, "Exception in backup files...", ioException);
             }
-            FileExecutions.store(pluginProvider, file, path, true);
+            FileExecutions.store(pluginProvider, file, resourcePath, true);
         }
         return loader;
     }

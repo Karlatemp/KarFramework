@@ -9,6 +9,7 @@
 package io.github.karlatemp.karframework.format;
 
 import com.google.common.base.Splitter;
+import io.github.karlatemp.karframework.internal.ListUtils;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +59,11 @@ class ConfigTranslator implements Translator {
 
     @Override
     public @Nullable FormatAction getTranslation(@NotNull String key) {
-        Object value = root.getNode(Splitter.on('.').split(key)).getValue();
+        Object value = root.getNode(
+                ListUtils.toList(
+                        Splitter.on('.').split(key)
+                ).toArray()
+        ).getValue();
         if (value != null) return FormatAction.parse(value.toString());
         return null;
     }
