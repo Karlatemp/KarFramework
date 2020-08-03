@@ -31,7 +31,7 @@ public class ConfigurationFactory {
             @NotNull IPluginProvider pluginProvider,
             @NotNull String path
     ) {
-        File file = new File(path);
+        File file = new File(pluginProvider.getPluginDataFolder(), path);
         FileExecutions.store(pluginProvider, file, path, false);
         String type = Files.getFileExtension(path);
         ConfigurationLoader<? extends ConfigurationNode> loader;
