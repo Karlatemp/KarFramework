@@ -1,0 +1,9 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    compile project(':common')
+    compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot:1.10.2-R0.1-SNAPSHOT'
+}
