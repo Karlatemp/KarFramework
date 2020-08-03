@@ -11,7 +11,10 @@ package io.github.karlatemp.karframework.bukkit;
 import io.github.karlatemp.karframework.IKarFramework;
 import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.command.AbstractCommandFramework;
+import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +22,42 @@ import org.jetbrains.annotations.Nullable;
 
 public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> implements IKarFramework {
     static KarFrameworkBukkit INSTANCE;
+    static final String nmsVersion;
+    static final NMSProvider nmsProvider;
+
+    static {
+        Server server = Bukkit.getServer();
+        Class<? extends Server> craftServerClass = server.getClass();
+        String ov = craftServerClass.getName().substring(
+                "org.bukkit.craftserver.".length()
+        );
+        int split = ov.indexOf('.');
+        nmsVersion = ov.substring(0, split);
+        nmsProvider = buildNMSImplement(NMSProvider.class, FormatAction.parse(
+                "io.github.karlatemp.karframework.nms.{0}.NMSProviderImpl"
+        ));
+    }
+
+    public static @NotNull NMSProvider getNmsProvider() {
+        return nmsProvider;
+    }
+
+    @NotNull
+    public static <T> T buildNMSImplement(
+            @NotNull Class<T> topClass,
+            @NotNull FormatAction classFormat
+    ) {
+        ClassLoader loader = topClass.getClassLoader();
+        try {
+            return Class.forName(
+                    classFormat.apply(new String[]{nmsVersion}),
+                    true,
+                    loader
+            ).asSubclass(topClass).newInstance();
+        } catch (Throwable any) {
+            throw new RuntimeException(any);
+        }
+    }
 
     KarFrameworkBukkit(@NotNull Translator translator) {
         super(translator);
