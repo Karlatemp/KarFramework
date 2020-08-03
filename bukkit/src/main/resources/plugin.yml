@@ -1,0 +1,5 @@
+name: KarFramework
+main: io.github.karlatemp.karframework.bukkit.KarFrameworkBukkitBootstrap
+version: 1.0.0
+author: Karlatemp
+

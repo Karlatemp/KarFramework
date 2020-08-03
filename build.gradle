@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+}
+
+
+allprojects {
+    group 'io.github.karlatemp.kar-framework'
+    version '1.0.0'
+}
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = 'sponge'
+            url = 'https://repo.spongepowered.org/maven'
+        }
+        maven {
+            name = 'SpigotMC'
+            url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        }
+    }
+}
+subprojects {
+    afterEvaluate {
+        dependencies {
+            testCompile group: 'junit', name: 'junit', version: '4.12'
+            def configurationVersion = '3.6.1'
+            // https://mvnrepository.com/artifact/org.jetbrains/annotations
+            compile group: 'org.jetbrains', name: 'annotations', version: '19.0.0'
+            compile 'commons-lang:commons-lang:2.6'
+            compile "org.spongepowered:configurate-hocon:$configurationVersion"
+            compile "org.spongepowered:configurate-gson:$configurationVersion"
+            compile "org.spongepowered:configurate-yaml:$configurationVersion"
+        }
+    }
+}
+
+afterEvaluate {
+    dependencies {
+        rootProject.subprojects.each { proj ->
+            implementation proj
+        }
+    }
+}
+shadowJar {
+    dependencyFilter.exclude { dep ->
+        switch (dep.moduleGroup) {
+            case "net.md-5":
+            case "commons-lang":
+            case "io.netty":
+                return true
+        }
+        switch (dep.moduleGroup + ':' + dep.moduleName) {
+            case "com.google.code.gson:gson":
+            case "com.google.guava:guava":
+            case "com.googlecode.json-simple:json-simple":
+            case "org.spigotmc:spigot-api":
+            case "junit:junit":
+            case "org.hamcrest:hamcrest-core":
+            case "se.llbit:jo-nbt":
+            case "net.sf.trove4j:core":
+                return true
+        }
+        println('-> ' + dep.moduleGroup + ':' + dep.moduleName)
+        return false
+    }
+}
