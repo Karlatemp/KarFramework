@@ -9,12 +9,19 @@
 package io.github.karlatemp.karframework.bungee;
 
 import io.github.karlatemp.karframework.IPluginProvider;
+import io.github.karlatemp.karframework.command.ICommandNode;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class BungeePluginProvider implements IPluginProvider {
@@ -42,5 +49,29 @@ public class BungeePluginProvider implements IPluginProvider {
     @Override
     public @NotNull Logger getLogger() {
         return plugin.getLogger();
+    }
+
+    @Override
+    public <T> void provideCommand(@NotNull String name, @NotNull ICommandNode<T> node) {
+        @SuppressWarnings("unchecked") ICommandNode<CommandSender> node0 = (ICommandNode<CommandSender>) node;
+        class CC extends Command implements TabExecutor {
+            public CC() {
+                super(node.getName().toLowerCase(Locale.ENGLISH),
+                        node.getPermission(),
+                        (plugin.getDescription().getName() + ":" + node.getName()).toLowerCase(Locale.ENGLISH)
+                );
+            }
+
+            @Override
+            public void execute(CommandSender sender, String[] args) {
+                node0.execute(sender, Arrays.asList(args));
+            }
+
+            @Override
+            public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+                return node0.tabCompile(sender, Arrays.asList(args));
+            }
+        }
+        ProxyServer.getInstance().getPluginManager().registerCommand(plugin, new CC());
     }
 }

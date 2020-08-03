@@ -8,6 +8,7 @@
 
 package io.github.karlatemp.karframework;
 
+import io.github.karlatemp.karframework.command.ICommandNode;
 import io.github.karlatemp.karframework.internal.ConfigurationFactory;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -36,8 +37,10 @@ public interface IPluginProvider {
     }
 
     default void restoreConfiguration(@NotNull ConfigurationLoader<?> loader, @NotNull ConfigurationNode node) {
-        ConfigurationFactory.restoreConfiguration(this,loader,node);
+        ConfigurationFactory.restoreConfiguration(this, loader, node);
     }
 
     @NotNull Logger getLogger();
+
+    <T> void provideCommand(@NotNull String name,@NotNull ICommandNode<T> node);
 }
