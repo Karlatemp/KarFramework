@@ -1,3 +1,5 @@
+import java.util.function.Predicate
+
 /*
  * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
  * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
@@ -52,7 +54,9 @@ afterEvaluate {
         }
     }
 }
+
 shadowJar {
+    classifier = ""
     dependencyFilter.exclude { dep ->
         switch (dep.moduleGroup) {
             case "net.md-5":
@@ -75,3 +79,23 @@ shadowJar {
         return false
     }
 }
+
+jar {
+    enabled = false
+}
+
+({
+    def mkpom = new File("G:\\KarlatempRepo\\mkpom.gradle")
+    if (mkpom.isFile()) {
+        extensions.add("pomFilter", { dep ->
+            if(dep.group == "org.spigotmc" || dep.group == "net.md-5") {
+                return false
+            }
+            return true
+        } as Predicate<Dependency>)
+        apply from: mkpom
+        def t = tasks.getByName("publishToMavenLocal")
+        t.dependsOn("shadowJar")
+    }
+})()
+
