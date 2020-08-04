@@ -77,7 +77,7 @@ public class NBTLongArray
 
     @Override
     public void clear() {
-        base.clear();
+        setValue(new long[0]);
     }
 
     @Override

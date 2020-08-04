@@ -76,7 +76,7 @@ public class NBTByteArray
 
     @Override
     public void clear() {
-        base.clear();
+        setValue(new byte[0]);
     }
 
     @Override

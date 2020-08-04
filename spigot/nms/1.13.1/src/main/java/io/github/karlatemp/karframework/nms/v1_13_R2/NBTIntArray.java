@@ -68,7 +68,7 @@ public class NBTIntArray
 
     @Override
     public void clear() {
-        base.clear();
+        setValue(new int[0]);
     }
 
     @Override
