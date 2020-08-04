@@ -38,6 +38,7 @@ public class NBTList
 
     @Override
     public void add(int index, ITag value) {
+        // TODO: Support add.
         base.add(index, ((NBTBaseWrapper<?>) value).base);
     }
 
@@ -48,11 +49,13 @@ public class NBTList
 
     @Override
     public boolean setSafely(int index, ITag value) {
+        // TODO: Finish safely set.
         return false;
     }
 
     @Override
     public boolean addSafely(int index, ITag value) {
+        // TODO: Finish safely add.
         return false;
     }
 

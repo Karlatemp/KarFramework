@@ -6,13 +6,12 @@
  * kar-framework/kar-framework.spigot-nms-1_16_1.main/NBTByteArray.java
  */
 
-package io.github.karlatemp.karframework.nms.v1_13_R1;
+package io.github.karlatemp.karframework.nms.v1_12_R1;
 
 import io.github.karlatemp.karframework.opennbt.ITag;
 import io.github.karlatemp.karframework.opennbt.ITagByteArray;
 import io.github.karlatemp.karframework.opennbt.ITagNumber;
-import net.minecraft.server.v1_13_R1.NBTTagByte;
-import net.minecraft.server.v1_13_R1.NBTTagByteArray;
+import net.minecraft.server.v1_12_R1.NBTTagByteArray;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +21,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class NBTByteArray
-        extends NBTBaseList<NBTTagByteArray>
+        extends NBTBaseWrapper<NBTTagByteArray>
         implements ITagByteArray {
     public NBTByteArray(NBTTagByteArray base) {
         super(base);
@@ -58,7 +57,7 @@ public class NBTByteArray
 
     @Override
     public byte get(int index) {
-        return base.get(index).g();
+        return base.c()[index];
     }
 
     @Override
@@ -81,7 +80,10 @@ public class NBTByteArray
 
     @Override
     public byte set(int index, byte value) {
-        return base.set(index, new NBTTagByte(value)).g();
+        byte[] values = getValues();
+        byte old = values[index];
+        values[index] = value;
+        return old;
     }
 
     @Override
@@ -100,13 +102,22 @@ public class NBTByteArray
 
     @Override
     public int size() {
-        return base.size();
+        return getValues().length;
+    }
+
+    @Override
+    public boolean set(int index, ITag value) {
+        if (value instanceof ITagNumber) {
+            set(index, ((ITagNumber) value).asByte());
+            return true;
+        }
+        return false;
     }
 
     @Override
     public @NotNull ITagByteArray clone() {
         return new NBTByteArray(new NBTTagByteArray(
-                Arrays.copyOf(base.c(), base.size())
+                Arrays.copyOf(base.c(), base.c().length)
         ));
     }
 }

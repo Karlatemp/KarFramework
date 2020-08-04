@@ -48,12 +48,12 @@ public class NBTList
 
     @Override
     public boolean setSafely(int index, ITag value) {
-        return false;
+        return base.a(index, ((NBTBaseWrapper<?>) value).base);
     }
 
     @Override
     public boolean addSafely(int index, ITag value) {
-        return false;
+        return base.b(index, ((NBTBaseWrapper<?>) value).base);
     }
 
     @Override

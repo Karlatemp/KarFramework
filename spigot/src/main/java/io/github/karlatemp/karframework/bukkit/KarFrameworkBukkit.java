@@ -25,7 +25,7 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
     static KarFrameworkBukkit INSTANCE;
     static final String nmsVersion;
     static final NMSProvider nmsProvider;
-    static final INbtProvider nbtProvider;
+    static final IBukkitNbtProvider nbtProvider;
 
     static {
         Server server = Bukkit.getServer();
@@ -38,7 +38,7 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
         nmsProvider = buildNMSImplement(NMSProvider.class, FormatAction.parse(
                 "io.github.karlatemp.karframework.nms.{0}.NMSProviderImpl"
         ));
-        nbtProvider = buildNMSImplement(INbtProvider.class, FormatAction.parse(
+        nbtProvider = buildNMSImplement(IBukkitNbtProvider.class, FormatAction.parse(
                 "io.github.karlatemp.karframework.nms.{0}.NMS_NBTProvider"
         ), new UnsupportedNBTProvider());
     }
@@ -83,7 +83,7 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
         return INSTANCE;
     }
 
-    public static @NotNull INbtProvider getNbtProvider() {
+    public static @NotNull IBukkitNbtProvider getNbtProvider() {
         return nbtProvider;
     }
 

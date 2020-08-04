@@ -100,7 +100,7 @@ public class KarFrameworkBukkitBootstrap
                 ).registerSubCommand(framework.newSingleCommand().setName("c5")
                         .setExecutor((sender, arguments, sourceArguments) -> {
                             if (sender instanceof Player) {
-                                final ITagCompound tagCompound = ((TestCodes) KarFrameworkBukkit.getNbtProvider()).invokeTest((Player) sender);
+                                final ITagCompound tagCompound = KarFrameworkBukkit.getNbtProvider().readCompound((Player) sender);
                                 System.out.println(tagCompound.get("Inventory"));
                                 System.out.println(tagCompound.get("Inventory").getClass());
                             } else {
