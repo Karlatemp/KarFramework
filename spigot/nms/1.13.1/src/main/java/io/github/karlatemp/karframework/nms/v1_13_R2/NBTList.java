@@ -101,7 +101,7 @@ public class NBTList
 
     @Override
     public double getDouble(int index) {
-        return base.h(index);
+        return base.k(index);
     }
 
     @Override

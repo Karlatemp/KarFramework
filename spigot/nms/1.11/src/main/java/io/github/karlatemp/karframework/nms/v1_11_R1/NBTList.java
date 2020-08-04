@@ -81,7 +81,7 @@ public class NBTList
 
     @Override
     public @NotNull ITagList getList(int index) {
-        final NBTBase base = this.base.h (index);
+        final NBTBase base = this.base.h(index);
         if (base instanceof NBTTagList) {
             return new NBTList((NBTTagList) base);
         }

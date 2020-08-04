@@ -91,7 +91,7 @@ public class NBTList
     @Override
     public short getShort(int index) {
         final NBTBase base = this.base.h(index);
-        if (base instanceof NBTTagShort) return ((NBTTagShort) base).f();
+        if (base instanceof NBTTagShort) return ((NBTTagShort) base).e();
         return 0;
     }
 
