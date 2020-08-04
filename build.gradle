@@ -16,7 +16,7 @@ plugins {
 
 allprojects {
     group 'io.github.karlatemp.kar-framework'
-    version '1.2.0-RC'
+    version '1.2.0'
 }
 allprojects {
     repositories {
