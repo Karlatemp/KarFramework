@@ -1,3 +1,7 @@
+# 1.2.0-RC
+
+- NBT Provider support. (Pre-release) - \[NBT Framework]
+
 # 1.1.0
 
 - Fix translate.conf, you need delete the old `translate.conf`
