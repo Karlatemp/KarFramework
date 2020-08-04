@@ -33,7 +33,7 @@ public class NBTLongArray
     static {
         try {
             Field f = null;
-            for (Field fw : NBTTagIntArray.class.getDeclaredFields()) {
+            for (Field fw : NBTTagLongArray.class.getDeclaredFields()) {
                 if (!Modifier.isStatic(fw.getModifiers())) {
                     if (fw.getType() == long[].class) {
                         f = fw;
