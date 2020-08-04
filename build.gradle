@@ -47,8 +47,8 @@ subprojects {
             compile "org.spongepowered:configurate-hocon:$configurationVersion"
             compile "org.spongepowered:configurate-gson:$configurationVersion"
             compile "org.spongepowered:configurate-yaml:$configurationVersion"
-            if (project.name.startsWith("bukkit-nms")) {
-                compile project(':bukkit')
+            if (project.name.startsWith("spigot-nms")) {
+                compile project(':spigot')
             }
         }
     }

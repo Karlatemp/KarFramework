@@ -8,13 +8,13 @@
 
 rootProject.name = 'kar-framework'
 include(':common')
-include(':bukkit')
+include(':spigot')
 
 ({
-    def nms = new File(rootProject.projectDir, "bukkit/nms")
+    def nms = new File(rootProject.projectDir, "spigot/nms")
     nms.listFiles().each { dir ->
         if (dir.isDirectory()) {
-            def name = ':bukkit-nms-' + dir.name.replace('.', '_')
+            def name = ':spigot-nms-' + dir.name.replace('.', '_')
             include(name)
             project(name).projectDir = dir
         }
