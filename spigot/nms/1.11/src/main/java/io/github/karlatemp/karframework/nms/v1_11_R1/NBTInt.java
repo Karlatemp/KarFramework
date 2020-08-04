@@ -27,7 +27,6 @@ public class NBTInt extends NBTBaseWrapper<NBTTagInt> implements ITagInt {
         return new NBTInt(base.c());
     }
 
-
     @Override
     public int asInt() {
         return base.e();
@@ -56,4 +55,5 @@ public class NBTInt extends NBTBaseWrapper<NBTTagInt> implements ITagInt {
     @Override
     public float asFloat() {
         return base.i();
-    }}
+    }
+}
