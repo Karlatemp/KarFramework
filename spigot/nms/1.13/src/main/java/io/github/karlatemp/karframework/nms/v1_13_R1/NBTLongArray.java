@@ -42,7 +42,7 @@ public class NBTLongArray
                     }
                 }
             }
-            VALUE = Objects.requireNonNull(f, "Field int[] NBTTagIntArray.value not found");
+            VALUE = Objects.requireNonNull(f, "Field long[] NBTTagLongArray.value not found");
         } catch (Throwable any) {
             throw new ExceptionInInitializerError(any);
         }

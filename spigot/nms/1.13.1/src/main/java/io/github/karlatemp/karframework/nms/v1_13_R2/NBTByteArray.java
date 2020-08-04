@@ -13,15 +13,47 @@ import io.github.karlatemp.karframework.opennbt.ITagByteArray;
 import io.github.karlatemp.karframework.opennbt.ITagNumber;
 import net.minecraft.server.v1_13_R2.NBTTagByte;
 import net.minecraft.server.v1_13_R2.NBTTagByteArray;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class NBTByteArray
         extends NBTBaseList<NBTTagByteArray>
         implements ITagByteArray {
     public NBTByteArray(NBTTagByteArray base) {
         super(base);
+    }
+
+    private static final Field VALUE;
+
+    static {
+        try {
+            Field f = null;
+            for (Field fw : NBTTagByteArray.class.getDeclaredFields()) {
+                if (!Modifier.isStatic(fw.getModifiers())) {
+                    if (fw.getType() == byte[].class) {
+                        f = fw;
+                        fw.setAccessible(true);
+                        break;
+                    }
+                }
+            }
+            VALUE = Objects.requireNonNull(f, "Field byte[] NBTTagByteArray.value not found");
+        } catch (Throwable any) {
+            throw new ExceptionInInitializerError(any);
+        }
+    }
+
+    private void setValue(byte[] value) {
+        try {
+            VALUE.set(base, value);
+        } catch (IllegalAccessException e) {
+            throw new Error(e);
+        }
     }
 
     @Override
@@ -31,7 +63,10 @@ public class NBTByteArray
 
     @Override
     public byte remove(int index) {
-        return base.remove(index).g();
+        byte[] values = getValues();
+        byte old = values[index];
+        setValue(ArrayUtils.remove(values, index));
+        return old;
     }
 
     @Override
@@ -51,7 +86,7 @@ public class NBTByteArray
 
     @Override
     public void add(int index, byte value) {
-        base.add(index, new NBTTagByte(value));
+        setValue(ArrayUtils.add(getValues(), index, value));
     }
 
     @Override
@@ -71,7 +106,7 @@ public class NBTByteArray
     @Override
     public @NotNull ITagByteArray clone() {
         return new NBTByteArray(new NBTTagByteArray(
-                Arrays.copyOf(base.c(),base.size())
+                Arrays.copyOf(base.c(), base.size())
         ));
     }
 }
