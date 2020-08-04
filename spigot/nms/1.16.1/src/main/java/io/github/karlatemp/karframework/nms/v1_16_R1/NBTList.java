@@ -42,6 +42,11 @@ public class NBTList
     }
 
     @Override
+    public void add(ITag value) {
+        base.add(((NBTBaseWrapper<?>) value).base);
+    }
+
+    @Override
     public boolean setSafely(int index, ITag value) {
         return false;
     }

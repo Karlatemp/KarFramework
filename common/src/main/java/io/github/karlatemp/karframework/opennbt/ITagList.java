@@ -12,20 +12,38 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ITagList extends ITag {
     ITag remove(int index);
+
     @NotNull ITagCompound getCompound(int index);
+
     @NotNull ITagList getList(int index);
+
     short getShort(int index);
+
     int getInt(int index);
+
     @NotNull int[] getIntArray(int index);
+
     double getDouble(int index);
+
     float getFloat(int index);
+
     @NotNull String getString(int index);
+
     int size();
+
     ITag get(int index);
-    ITag set(int index,ITag value);
-    void add(int index,ITag value);
-    boolean setSafely(int index,ITag value);
-    boolean addSafely(int index,ITag value);
+
+    ITag set(int index, ITag value);
+
+    void add(int index, ITag value);
+
+    void add(ITag value);
+
+    boolean setSafely(int index, ITag value);
+
+    boolean addSafely(int index, ITag value);
+
     @NotNull ITagList clone();
+
     void clear();
 }

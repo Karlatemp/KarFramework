@@ -11,15 +11,49 @@ package io.github.karlatemp.karframework.nms.v1_13_R1;
 import io.github.karlatemp.karframework.opennbt.ITag;
 import io.github.karlatemp.karframework.opennbt.ITagLongArray;
 import io.github.karlatemp.karframework.opennbt.ITagNumber;
+import net.minecraft.server.v1_13_R1.NBTTagIntArray;
 import net.minecraft.server.v1_13_R1.NBTTagLong;
 import net.minecraft.server.v1_13_R1.NBTTagLongArray;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 public class NBTLongArray
         extends NBTBaseList<NBTTagLongArray>
         implements ITagLongArray {
     public NBTLongArray(NBTTagLongArray base) {
         super(base);
+    }
+
+    private static final Field VALUE;
+
+    static {
+        try {
+            Field f = null;
+            for (Field fw : NBTTagIntArray.class.getDeclaredFields()) {
+                if (!Modifier.isStatic(fw.getModifiers())) {
+                    if (fw.getType() == long[].class) {
+                        f = fw;
+                        fw.setAccessible(true);
+                        break;
+                    }
+                }
+            }
+            VALUE = Objects.requireNonNull(f, "Field int[] NBTTagIntArray.value not found");
+        } catch (Throwable any) {
+            throw new ExceptionInInitializerError(any);
+        }
+    }
+
+    private void setValue(long[] value) {
+        try {
+            VALUE.set(base, value);
+        } catch (IllegalAccessException e) {
+            throw new Error(e);
+        }
     }
 
     @Override
@@ -53,7 +87,7 @@ public class NBTLongArray
 
     @Override
     public void add(int index, long value) {
-        base.add(index, new NBTTagLong(value));
+        setValue(ArrayUtils.add(getValues(), index, value));
     }
 
     @Override
@@ -68,6 +102,9 @@ public class NBTLongArray
 
     @Override
     public long remove(int index) {
-        return base.remove(index).d();
+        long[] values = getValues();
+        long old = values[index];
+        setValue(ArrayUtils.remove(values, index));
+        return old;
     }
 }
