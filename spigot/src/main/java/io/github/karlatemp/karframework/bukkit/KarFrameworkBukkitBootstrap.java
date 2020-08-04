@@ -13,6 +13,7 @@ import io.github.karlatemp.karframework.KarFramework;
 import io.github.karlatemp.karframework.command.CommandTree;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
+import io.github.karlatemp.karframework.opennbt.ITagCompound;
 import net.md_5.bungee.api.chat.TextComponent;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.bukkit.entity.Player;
@@ -91,6 +92,17 @@ public class KarFrameworkBukkitBootstrap
                                         new TextComponent(TextComponent.fromLegacyText("Sub Title!")),
                                         20, 100, 20
                                 );
+                            } else {
+                                sender.sendMessage("Oops. You are not a player.");
+                            }
+                        })
+                        .build()
+                ).registerSubCommand(framework.newSingleCommand().setName("c5")
+                        .setExecutor((sender, arguments, sourceArguments) -> {
+                            if (sender instanceof Player) {
+                                final ITagCompound tagCompound = ((TestCodes) KarFrameworkBukkit.getNbtProvider()).invokeTest((Player) sender);
+                                System.out.println(tagCompound.get("Inventory"));
+                                System.out.println(tagCompound.get("Inventory").getClass());
                             } else {
                                 sender.sendMessage("Oops. You are not a player.");
                             }

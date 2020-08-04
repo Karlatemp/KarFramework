@@ -13,6 +13,7 @@ import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.command.AbstractCommandFramework;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
+import io.github.karlatemp.karframework.opennbt.INbtProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,7 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
     static KarFrameworkBukkit INSTANCE;
     static final String nmsVersion;
     static final NMSProvider nmsProvider;
+    static final INbtProvider nbtProvider;
 
     static {
         Server server = Bukkit.getServer();
@@ -36,6 +38,9 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
         nmsProvider = buildNMSImplement(NMSProvider.class, FormatAction.parse(
                 "io.github.karlatemp.karframework.nms.{0}.NMSProviderImpl"
         ));
+        nbtProvider = buildNMSImplement(INbtProvider.class, FormatAction.parse(
+                "io.github.karlatemp.karframework.nms.{0}.NMS_NBTProvider"
+        ), new UnsupportedNBTProvider());
     }
 
     public static @NotNull NMSProvider getNmsProvider() {
@@ -47,6 +52,15 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
             @NotNull Class<T> topClass,
             @NotNull FormatAction classFormat
     ) {
+        return buildNMSImplement(topClass, classFormat, null);
+    }
+
+    @NotNull
+    public static <T> T buildNMSImplement(
+            @NotNull Class<T> topClass,
+            @NotNull FormatAction classFormat,
+            @Nullable T defaultImplement
+    ) {
         ClassLoader loader = topClass.getClassLoader();
         try {
             return Class.forName(
@@ -55,6 +69,7 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
                     loader
             ).asSubclass(topClass).newInstance();
         } catch (Throwable any) {
+            if (defaultImplement != null) return defaultImplement;
             throw new RuntimeException(any);
         }
     }
@@ -66,6 +81,10 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
     @SuppressWarnings("unused")
     public static KarFrameworkBukkit getInstance() {
         return INSTANCE;
+    }
+
+    public static @NotNull INbtProvider getNbtProvider() {
+        return nbtProvider;
     }
 
     @Override
