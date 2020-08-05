@@ -1,3 +1,11 @@
+# 1.3.0
+
+- Created some io utils.
+- Provided following methods in NMSProvider
+  - `@NotNull BaseComponent[] toComponents(@NotNull ItemStack itemStack);`
+  - `@NotNull BaseComponent[] getItemName(@NotNull ItemStack itemStack);`
+- 2020/08/05
+
 # 1.2.0
 
 - NBT Framework finished

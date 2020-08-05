@@ -13,11 +13,11 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
-
 allprojects {
     group 'io.github.karlatemp.kar-framework'
-    version '1.2.0'
+    version '1.3.0'
 }
+
 allprojects {
     repositories {
         mavenLocal()
