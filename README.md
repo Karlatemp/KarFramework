@@ -4,7 +4,7 @@
 
 ## What's this
 
-Here is a framework of bungee/bukkit and standard application.
+Here is a framework of bungee/~~bukkit~~ Spigot and standard application.
 
 Using this framework. You can:
 - Building commands with link calling.
@@ -81,10 +81,10 @@ class TestFramework implements ICommandFramework<PrintStream> {
 }
 ```
 
-### Bukkit/Bungee Command Node
+### Spigot/Bungee Command Node
 
-In bukkit/bungee. We have standard frameworks. You can get they with 
-`KarFrameworkBukkit.getInstance()/KarFrameworkBungee.getInstance()` 
+In ~~bukkit~~ Spigot/bungee. We have standard frameworks. You can get they with 
+`KarFrameworkBukkit.getInstance()/KarFrameworkBungee.getInstance()`.
 
 Here is an example.
 ```java
@@ -117,10 +117,10 @@ We have integrated 3 configurations format support(HOCON, JSON, YAML),
 
 Powered by [SpongePowered/Configurate](https://github.com/SpongePowered/Configurate)
 
-You can use them in bukkit/bungee, or other applications.
+You can use them in ~~bukkit~~ Spigot/bungee, or other applications.
 Just need implements your own [IPluginProvider](common/src/main/java/io/github/karlatemp/karframework/IPluginProvider.java)
 
-Here is an example on Bukkit
+Here is an example on ~~Bukkit~~ Spigot
 
 ```java
 public class MyPlugin extends JavaPlugin {
@@ -141,3 +141,37 @@ public class MyPlugin extends JavaPlugin {
     }
 }
 ```
+
+## NBT Framework
+
+On ~~bukkit~~ Spigot, We provided NBT Framework.
+You can use our framework to access nbt
+without having to visit nms by yourself.
+
+First. You need get our nbt framework with
+`IBukkitNbtProvider provider = KarFrameworkBukkit.getNbtProvider();`.
+
+Access nbt will be very easy.
+
+```java
+public class TestNBT { public static void test() {
+    ITagCompound item = provider.newCompound();
+    item.setString("id", "minecraft:stone");
+    ItemStack itemStack = provider.fromCompound(item);
+} }
+```
+
+## NMS Framework
+
+On ~~bukkit~~ Spigot, We provided
+
+- `void sendPacket(Player, Object packet)`
+- `void sendTitle(Player, BaseComponent, BaseComponent, int, int, int)`
+- `void sendAction(Player, BaseComponent)` (sendActionBar)
+- `CommandMap getCommandMap()`
+- `Function<@NotNull String, @Nullable String> getSystemLocale()`
+- `Object getHandle(Entity)`
+- `BaseComponent[] toComponents(ItemStack)`
+- `BaseComponent[] getItemName(ItemStack)`
+
+in `KarFrameworkBukkit.getNmsProvider()`.

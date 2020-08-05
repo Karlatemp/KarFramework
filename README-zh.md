@@ -4,7 +4,7 @@
 
 ## 这是什么
 
-这是一个 bungee/bukkit 和标准java程序的一个框架,
+这是一个 bungee/~~bukkit~~ Spigot 和标准java程序的一个框架,
 
 使用此框架，你可以:
 - 使用链式构建命令系统
@@ -119,10 +119,10 @@ public class CommandRegister {
 
 Powered by [SpongePowered/Configurate](https://github.com/SpongePowered/Configurate)
 
-你可以在 bukkit/bugee, 或者你自己的应用程序使用他们.
+你可以在 ~~bukkit~~ Spigot/bugee, 或者你自己的应用程序使用他们.
 只需要实现自己的 [IPluginProvider](common/src/main/java/io/github/karlatemp/karframework/IPluginProvider.java)
 
-下面是一段运行在 Bukkit 的示例代码
+下面是一段运行在 ~~bukkit~~ Spigot 的示例代码
 
 
 ```java
@@ -145,3 +145,36 @@ public class MyPlugin extends JavaPlugin {
 }
 ```
 
+----
+
+## NBT Framework
+
+在 ~~bukkit~~ Spigot 平台上, 我们提供了 NBT 操作框架, 你可以使用我们的操作框架,
+而不需要自己访问 nms (实验性)
+
+首先你需要获取我们的 NBT Provider.
+`IBukkitNbtProvider provider = KarFrameworkBukkit.getNbtProvider();`
+
+这能让你操作 nbt 变得十分简单
+
+```java
+public class TestNBT { public static void test() {
+    ITagCompound item = provider.newCompound();
+    item.setString("id", "minecraft:stone");
+    ItemStack itemStack = provider.fromCompound(item);
+} }
+```
+
+## NMS Framework
+
+在 ~~bukkit~~ Spigot 上, 我们提供了一些快速框架, 包括
+- `void sendPacket(Player, Object packet)`
+- `void sendTitle(Player, BaseComponent, BaseComponent, int, int, int)`
+- `void sendAction(Player, BaseComponent)` (sendActionBar)
+- `CommandMap getCommandMap()`
+- `Function<@NotNull String, @Nullable String> getSystemLocale()`
+- `Object getHandle(Entity)`
+- `BaseComponent[] toComponents(ItemStack)`
+- `BaseComponent[] getItemName(ItemStack)`
+
+你所需要做的就是 `KarFrameworkBukkit.getNmsProvider().....`
