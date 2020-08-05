@@ -1,21 +1,20 @@
 # KarFramework
 
-[简体中文](./README-zh.md)
+[ENGLISH](./README.md)
 
-## What's this
+## 这是什么
 
-Here is a framework of bungee/bukkit and standard application.
+这是一个 bungee/bukkit 和标准java程序的一个框架,
 
-Using this framework. You can:
-- Building commands with link calling.
-- Loading/Saving your configuration anywhere.
-- Template support!
-- Regex Replacer. in `RegexUtils`
+使用此框架，你可以:
+- 使用链式构建命令系统
+- 快速加载你的系统配置
+- 字符串模板支撑
+- 正则替换器, 就在 `RegexUtils` 里面
 
-## How to use
+## 如何使用
 
-First, add our repository (https://raw.githubusercontent.com/Karlatemp/karlatemp-repo/master/)
-into your repositories 
+首先, 你需要添加我们的mvn仓库地址 (https://raw.githubusercontent.com/Karlatemp/karlatemp-repo/master/)
 
 Gradle:
 ```groovy
@@ -27,7 +26,8 @@ repositories {
 }
 ```
 
-Now, you can use our framework now!
+然后你就可以开始使用我们的框架了!
+
 
 ```groovy
 dependencies {
@@ -35,15 +35,15 @@ dependencies {
 }
 ```
 
-Latest version: `1.2.0`
+最后一个版本为: `1.2.0`
 
-## Command Node
+## 命令树
 
-### Common Command Node
+### 标准命令树
 
-You can create command node with link calling.
+你可以使用链式创建命令树.
 
-First. You need a command-framework.
+首先, 你需要一个 `CommandFramework`
 
 ```java
 class TestFramework
@@ -51,9 +51,10 @@ class TestFramework
     implements ICommandFramework<PrintStream> {}
 ```
 
-You can found example [here](common/src/test/java/io/github/karframwork/common/test/TestCommand.java)
+你可以在 [这里](common/src/test/java/io/github/karframwork/common/test/TestCommand.java)
+找到我们的示例文件
 
-Then, we can register our commands now.
+然后, 开始注册我们的命令吧
 
 ```java
 class TestFramework implements ICommandFramework<PrintStream> {
@@ -81,12 +82,13 @@ class TestFramework implements ICommandFramework<PrintStream> {
 }
 ```
 
-### Bukkit/Bungee Command Node
+### Bukkit/Bungee 命令树
 
-In bukkit/bungee. We have standard frameworks. You can get they with 
+在 Bukkit/BungeeCord, 我们已经提供了对应平台的标准 `CommandFramework`.
+你可以使用以下方法获取:
 `KarFrameworkBukkit.getInstance()/KarFrameworkBungee.getInstance()` 
 
-Here is an example.
+这是一个示例代码
 ```java
 public class CommandRegister {
     public static void register() {
@@ -111,16 +113,17 @@ public class CommandRegister {
 }
 ```
 
-## Configuration with SpongePowered
+## 快速加载你的配置文件 (Powered by SpongePowered)
 
-We have integrated 3 configurations format support(HOCON, JSON, YAML),
+我们提供了三种配置格式支持, HOCON, JSON, YAML
 
 Powered by [SpongePowered/Configurate](https://github.com/SpongePowered/Configurate)
 
-You can use them in bukkit/bungee, or other applications.
-Just need implements your own [IPluginProvider](common/src/main/java/io/github/karlatemp/karframework/IPluginProvider.java)
+你可以在 bukkit/bugee, 或者你自己的应用程序使用他们.
+只需要实现自己的 [IPluginProvider](common/src/main/java/io/github/karlatemp/karframework/IPluginProvider.java)
 
-Here is an example on Bukkit
+下面是一段运行在 Bukkit 的示例代码
+
 
 ```java
 public class MyPlugin extends JavaPlugin {
@@ -141,3 +144,4 @@ public class MyPlugin extends JavaPlugin {
     }
 }
 ```
+
