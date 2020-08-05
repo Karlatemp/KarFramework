@@ -12,6 +12,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,4 +35,9 @@ public interface NMSProvider {
     @NotNull CommandMap getCommandMap();
 
     @NotNull Function<@NotNull String, @Nullable String> getSystemLocale();
+
+    @NotNull BaseComponent[] toComponents(@NotNull ItemStack itemStack);
+
+    @NotNull BaseComponent[] getItemName(@NotNull ItemStack itemStack);
+
 }

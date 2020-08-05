@@ -17,6 +17,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.craftbukkit.v1_14_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -79,5 +80,17 @@ public class NMSProviderImpl implements NMSProvider {
     @Override
     public @NotNull Function<@NotNull String, @Nullable String> getSystemLocale() {
         return LocaleLanguage.a()::a;
+    }
+
+    @Override
+    public @NotNull BaseComponent[] getItemName(@NotNull org.bukkit.inventory.ItemStack itemStack) {
+        ItemStack stack = CraftItemStack.asNMSCopy(itemStack);
+        return ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(stack.getName()));
+    }
+
+    @Override
+    public @NotNull BaseComponent[] toComponents(@NotNull org.bukkit.inventory.ItemStack itemStack) {
+        ItemStack stack = CraftItemStack.asNMSCopy(itemStack);
+        return ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(stack.B()));
     }
 }
