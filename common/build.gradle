@@ -8,6 +8,7 @@
 
 plugins {
     id 'java'
+    id 'groovy'
 }
 
 dependencies {

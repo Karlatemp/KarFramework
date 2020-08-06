@@ -9,6 +9,7 @@
 rootProject.name = 'kar-framework'
 include(':common')
 include(':spigot')
+include(':groovy')
 
 ({
     def nms = new File(rootProject.projectDir, "spigot/nms")

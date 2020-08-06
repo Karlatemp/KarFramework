@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
+ * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
+ * @create 2020/08/07 24:13:36
+ *
+ * kar-framework/kar-framework/build.gradle
+ */
+
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
+dependencies {
+    compile project(':common')
+    compile project(':bungee')
+    compile project(':spigot')
+    compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compile 'net.md-5:bungeecord-api:1.16-R0.3-SNAPSHOT'
+    compile 'net.md-5:bungeecord-chat:1.16-R0.3-SNAPSHOT'
+}

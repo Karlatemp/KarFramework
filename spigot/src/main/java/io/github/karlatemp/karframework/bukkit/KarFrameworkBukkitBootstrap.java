@@ -18,10 +18,12 @@ import io.github.karlatemp.karframework.command.CommandTree;
 import io.github.karlatemp.karframework.command.InterruptCommand;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
+import io.github.karlatemp.karframework.groovy.GroovyScriptManager;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -82,6 +85,7 @@ public class KarFrameworkBukkitBootstrap
 
     @Override
     public void onEnable() {
+        // region Initialize commands
         Internal.SHUTDOWN_HOOK.set(shutdownHooks);
         KarFrameworkBukkit framework = KarFrameworkBukkit.getInstance();
         provider.provideCommand("karframework", new CommandTree<>(framework, "<ROOT>", null, "karframework.command.use")
@@ -187,6 +191,16 @@ public class KarFrameworkBukkitBootstrap
         OpenMCLang.preInit();
         reloadConfig();
         Internal.SHUTDOWN_HOOK.set(null);
+        // endregion
+        // region startup groovy
+        GroovyScriptManager manager = new GroovyScriptManager(provider, KarFrameworkBukkit.getInstance(), Bukkit.getLogger());
+        manager.release();
+        try {
+            manager.loadScript("startup.groovy").execute();
+        } catch (Throwable e) {
+            getLogger().log(Level.SEVERE, "Exception in executing startup script.", e);
+        }
+        // endregion
     }
 
     @Override

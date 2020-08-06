@@ -8,16 +8,19 @@
 
 package io.github.karlatemp.karframework;
 
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 import io.github.karlatemp.karframework.command.ICommandNode;
 import io.github.karlatemp.karframework.internal.ConfigurationFactory;
+import io.github.karlatemp.karframework.io.RandomAccessFileOutputStream;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public interface IPluginProvider {
@@ -53,4 +56,25 @@ public interface IPluginProvider {
     @NotNull Logger getLogger();
 
     <T> void provideCommand(@NotNull String name, @NotNull ICommandNode<T> node);
+
+    @SuppressWarnings("UnstableApiUsage")
+    default void storeResource(String path, File file, boolean force) {
+        if (!force && file.isFile()) {
+            return;
+        }
+        InputStream resource = getResource(path);
+        if (resource == null) {
+            getLogger().warning("Resource `" + path + "` not found.");
+            return;
+        }
+        try {
+            Files.createParentDirs(file);
+            try (InputStream incoming = resource;
+                 OutputStream outgoing = new BufferedOutputStream(new RandomAccessFileOutputStream(file))) {
+                ByteStreams.copy(incoming, outgoing);
+            }
+        } catch (IOException ioe) {
+            getLogger().log(Level.SEVERE, "Exception in saving " + path, ioe);
+        }
+    }
 }

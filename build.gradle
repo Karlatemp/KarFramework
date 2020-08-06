@@ -1,6 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 import java.util.function.Predicate
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 /*
  * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
@@ -82,7 +84,9 @@ subprojects {
 afterEvaluate {
     dependencies {
         rootProject.subprojects.each { proj ->
-            implementation proj
+            if (proj.name != 'groovy') {
+                implementation proj
+            }
         }
     }
 }
@@ -147,3 +151,44 @@ jar {
     }
 })()
 
+task packingGroovy() {
+    doFirst {
+        def files = rootProject.file('groovy/src/main/groovy')
+        def outX = rootProject.file('common/src/main/resources/karframework')
+        def output = new File(outX, 'groovy.zip')
+        output.parentFile.mkdirs()
+        def out = new ZipOutputStream(new FileOutputStream(output))
+        def walk = new Object() {
+            LinkedList<String> path = new LinkedList<>()
+
+            def view(File file) {
+                path.addLast(file.name)
+                if (file.isDirectory()) {
+                    out.putNextEntry(new ZipEntry(
+                            String.join('/', path) + '/'
+                    ))
+                    File[] files0 = file.listFiles()
+                    if (files0 != null) {
+                        files0.each { view(it) }
+                    }
+                } else if (file.isFile()) {
+                    out.putNextEntry(new ZipEntry(
+                            String.join('/', path)
+                    ))
+                    file.withInputStream { inp ->
+                        byte[] buffer = new byte[1024]
+                        while (true) {
+                            def length = inp.read(buffer)
+                            if (length == -1) break
+                            out.write(buffer, 0, length)
+                        }
+                    }
+                }
+                path.removeLast()
+            }
+        }
+        files.listFiles().each { walk.view(it) }
+        out.close()
+        new File(outX, 'groovy.txt').write(System.currentTimeMillis().toString())
+    }
+}
