@@ -10,7 +10,6 @@ package io.github.karlatemp.karframework.nms.v1_13_R1;
 
 import io.github.karlatemp.karframework.bukkit.NMSProvider;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.server.v1_13_R1.*;
 import org.bukkit.Bukkit;
@@ -93,5 +92,10 @@ public class NMSProviderImpl implements NMSProvider {
     public @NotNull BaseComponent[] toComponents(@NotNull org.bukkit.inventory.ItemStack itemStack) {
         ItemStack stack = CraftItemStack.asNMSCopy(itemStack);
         return ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(stack.A()));
+    }
+
+    @Override
+    public @NotNull String getVersion() {
+        return ((CraftServer) Bukkit.getServer()).getServer().getVersion();
     }
 }

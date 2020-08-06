@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public interface ICommandNode<T> extends ICommandExecutor<T>, ITabCompiler<T> {
@@ -70,5 +71,10 @@ public interface ICommandNode<T> extends ICommandExecutor<T>, ITabCompiler<T> {
         LinkedList<String> result = new LinkedList<>();
         tabCompile(sender, result, new LinkedList<>(arguments), ImmutableList.copyOf(arguments));
         return result;
+    }
+
+    default @NotNull ICommandNode<T> access(Consumer<@NotNull ICommandNode<T>> consumer) {
+        consumer.accept(this);
+        return this;
     }
 }

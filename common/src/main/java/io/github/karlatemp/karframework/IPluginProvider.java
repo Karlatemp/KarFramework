@@ -12,6 +12,7 @@ import io.github.karlatemp.karframework.command.ICommandNode;
 import io.github.karlatemp.karframework.internal.ConfigurationFactory;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,10 +21,12 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 public interface IPluginProvider {
+    @Contract(pure = true)
     @NotNull String getName();
 
     @Nullable InputStream getResource(@NotNull String path);
 
+    @Contract(pure = true)
     @NotNull File getPluginDataFolder();
 
     default @Nullable ConfigurationLoader<? extends ConfigurationNode> loadConfiguration(
@@ -31,6 +34,7 @@ public interface IPluginProvider {
     ) {
         return ConfigurationFactory.loadConfiguration(this, path);
     }
+
     default @Nullable ConfigurationLoader<? extends ConfigurationNode> loadConfiguration(
             @NotNull String resourcePath, @NotNull String filePath
     ) {
@@ -45,7 +49,8 @@ public interface IPluginProvider {
         ConfigurationFactory.restoreConfiguration(this, loader, node);
     }
 
+    @Contract(pure = true)
     @NotNull Logger getLogger();
 
-    <T> void provideCommand(@NotNull String name,@NotNull ICommandNode<T> node);
+    <T> void provideCommand(@NotNull String name, @NotNull ICommandNode<T> node);
 }

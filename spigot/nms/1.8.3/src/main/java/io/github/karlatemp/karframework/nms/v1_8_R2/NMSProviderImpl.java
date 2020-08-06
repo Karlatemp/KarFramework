@@ -93,4 +93,9 @@ public class NMSProviderImpl implements NMSProvider {
         ItemStack stack = CraftItemStack.asNMSCopy(itemStack);
         return ComponentSerializer.parse(IChatBaseComponent.ChatSerializer.a(stack.C()));
     }
+
+    @Override
+    public @NotNull String getVersion() {
+        return MinecraftServer.getServer().getVersion();
+    }
 }

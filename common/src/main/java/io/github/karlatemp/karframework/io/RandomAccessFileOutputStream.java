@@ -31,11 +31,11 @@ public class RandomAccessFileOutputStream extends OutputStream implements DataOu
     }
 
     public RandomAccessFileOutputStream(@NotNull File file) throws IOException {
-        this(new RandomAccessFile(file, "r"));
+        this(new RandomAccessFile(file, "rw"));
     }
 
     public RandomAccessFileOutputStream(@NotNull String file) throws IOException {
-        this(new RandomAccessFile(file, "r"));
+        this(new RandomAccessFile(file, "rw"));
     }
 
     public RandomAccessFileOutputStream(@NotNull File file, @NotNull String mode) throws IOException {

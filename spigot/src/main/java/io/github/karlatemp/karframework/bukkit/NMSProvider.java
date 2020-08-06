@@ -40,4 +40,6 @@ public interface NMSProvider {
 
     @NotNull BaseComponent[] getItemName(@NotNull ItemStack itemStack);
 
+    @NotNull String getVersion();
+
 }

@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 import java.util.function.Predicate
 
 /*
@@ -36,6 +38,7 @@ allprojects {
         }
     }
 }
+
 subprojects {
     afterEvaluate {
         dependencies {
@@ -47,6 +50,25 @@ subprojects {
             compile "org.spongepowered:configurate-hocon:$configurationVersion"
             compile "org.spongepowered:configurate-gson:$configurationVersion"
             compile "org.spongepowered:configurate-yaml:$configurationVersion"
+
+            def gversion = '3.0.5'
+            def igroovy = { vec ->
+                if (vec == '') {
+                    return "org.codehaus.groovy:groovy:${gversion}"
+                }
+                return "org.codehaus.groovy:groovy-${vec}:${gversion}"
+            }
+            compile igroovy('')
+            compile igroovy('astbuilder')
+            compile igroovy('datetime')
+            compile igroovy('json')
+            compile igroovy('jsr223')
+            compile igroovy('macro')
+            compile igroovy('nio')
+            compile igroovy('sql')
+            compile igroovy('xml')
+            compile igroovy('templates')
+
             if (project.name.startsWith("spigot-nms")) {
                 compile project(':spigot')
             }
@@ -63,7 +85,7 @@ afterEvaluate {
 }
 
 shadowJar {
-    classifier = ""
+    classifier("release")
     dependencyFilter.exclude { dep ->
         switch (dep.moduleGroup) {
             case "net.md-5":
@@ -87,6 +109,17 @@ shadowJar {
     }
 }
 
+({
+    def task = tasks.create("shadowReleaseJar", ShadowJar.class)
+    task.classifier("")
+    task.configurations.add(project.configurations.getByName('runtimeClasspath'))
+    task.dependencyFilter.exclude {
+        return it.moduleGroup != project.group.toString()
+    }
+})()
+
+task rebuildAll(dependsOn: ['clean', 'shadowJar', 'shadowReleaseJar'])
+
 jar {
     enabled = false
 }
@@ -101,8 +134,8 @@ jar {
             return true
         } as Predicate<Dependency>)
         apply from: mkpom
-        def t = tasks.getByName("publishToMavenLocal")
-        t.dependsOn("shadowJar")
+        def t = tasks.getByName('publishToMavenLocal')
+        t.dependsOn('shadowJar', 'shadowReleaseJar')
     }
 })()
 
