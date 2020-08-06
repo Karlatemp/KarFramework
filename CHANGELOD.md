@@ -1,3 +1,11 @@
+# 1.4.0
+
+- Hello Groovy
+- Startup scripts. (Supported ~~bukkit~~ Spigot.)
+    - in `plugins/KarFramework/scripts`
+- Bigger Binary file.
+- 2020/08/07
+
 # 1.3.0
 
 - Created some io utils.
