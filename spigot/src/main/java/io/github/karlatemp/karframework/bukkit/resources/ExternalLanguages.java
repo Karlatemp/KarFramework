@@ -8,19 +8,22 @@
 
 package io.github.karlatemp.karframework.bukkit.resources;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.karlatemp.karframework.IPluginProvider;
-import io.github.karlatemp.karframework.annotation.Warning;
 import io.github.karlatemp.karframework.bukkit.internal.Internal;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +39,7 @@ public class ExternalLanguages {
         // Must call in framework initialize
         String ignored = (pprovider = Internal.PLUGIN_PROVIDER.get()).getName();
         resources.clear();
+        OpenMCLang.initialize();
     }
 
     public static @Nullable Map<String, String> getLanguage(@NotNull String language) {
@@ -51,23 +55,34 @@ public class ExternalLanguages {
         Map<String, String> result = new HashMap<>();
 
         { // Select official lang first
-            String hashX = DownloadProviders.hashMapping.get("minecraft/lang/" + language + ".json");
-            if (hashX != null) {
-                try {
-                    final JsonObject object = DownloadProviders.parseFile(new File(DownloadProviders.objects, hashX)).getAsJsonObject();
-                    for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-                        result.put(entry.getKey(), entry.getValue().getAsString());
-                    }
-                } catch (Exception ioException) {
-                    pprovider.getLogger().log(Level.SEVERE, "Exception in parsing " + hashX
-                                    + " (" + "minecraft/lang/" + language + ".json" + ")",
-                            ioException);
-                }
-            }
+            Map<String, String> map0 = DownloadProviders.languages.get("minecraft/lang/" + language + ".json");
+            Map<String, String> map1 = DownloadProviders.languages.get("minecraft/lang/" + language + ".lang");
+            if (map0 != null) result.putAll(map0);
+            if (map1 != null) result.putAll(map1);
         }
         { // Select from resource packs
             for (ZipFile zip : ResourcePackLoader.resourceZipFiles) {
                 final ZipEntry entry = zip.getEntry("assets/minecraft/lang/" + language + ".json");
+                final ZipEntry entryLang = zip.getEntry("assets/minecraft/lang/" + language + ".lang");
+                if (entryLang != null) {
+                    try (Reader reader = new InputStreamReader(
+                            new BufferedInputStream(
+                                    zip.getInputStream(entryLang)
+                            ),
+                            StandardCharsets.UTF_8
+                    )) {
+                        Properties properties = new Properties();
+                        properties.load(reader);
+                        for (Map.Entry<Object, Object> entryZ : properties.entrySet()) {
+                            result.put(String.valueOf(entryZ.getKey()), String.valueOf(entryZ.getValue()));
+                        }
+                    } catch (Exception exception) {
+                        pprovider.getLogger().log(Level.SEVERE,
+                                "Exception in loading (" + "assets/minecraft/lang/" + language + ".lang" + ") "
+                                        + "from " + zip.getName(),
+                                exception);
+                    }
+                }
                 if (entry != null) {
                     try (Reader reader = new InputStreamReader(
                             new BufferedInputStream(
@@ -89,11 +104,13 @@ public class ExternalLanguages {
             }
         }
         if (result.isEmpty()) result = null;
+        else result = ImmutableMap.copyOf(result);
         future.complete(result);
         return result;
     }
 
-    /* internal */ static void dropAll() {
+    /* internal */
+    static void dropAll() {
         ResourcePackLoader.resourcePacks.clear();
         ResourcePackLoader.resourceZipFiles.removeIf(it -> {
             String name = it.getName();

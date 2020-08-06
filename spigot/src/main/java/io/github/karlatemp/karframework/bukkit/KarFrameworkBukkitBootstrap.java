@@ -13,14 +13,12 @@ import com.google.common.io.Files;
 import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.KarFramework;
 import io.github.karlatemp.karframework.bukkit.internal.Internal;
-import io.github.karlatemp.karframework.bukkit.resources.DownloadProviders;
-import io.github.karlatemp.karframework.bukkit.resources.ExternalLanguages;
-import io.github.karlatemp.karframework.bukkit.resources.OpenCommand;
-import io.github.karlatemp.karframework.bukkit.resources.ResourcePackLoader;
+import io.github.karlatemp.karframework.bukkit.resources.*;
 import io.github.karlatemp.karframework.command.CommandTree;
 import io.github.karlatemp.karframework.command.InterruptCommand;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -41,6 +39,7 @@ public class KarFrameworkBukkitBootstrap
         implements Translator {
     private Translator delegate;
     private IPluginProvider provider;
+    private final LinkedList<Runnable> shutdownHooks = new LinkedList<>();
 
     public KarFrameworkBukkitBootstrap() {
         delegate = Translator.nullTranslator();
@@ -83,6 +82,7 @@ public class KarFrameworkBukkitBootstrap
 
     @Override
     public void onEnable() {
+        Internal.SHUTDOWN_HOOK.set(shutdownHooks);
         KarFrameworkBukkit framework = KarFrameworkBukkit.getInstance();
         provider.provideCommand("karframework", new CommandTree<>(framework, "<ROOT>", null, "karframework.command.use")
                 .registerSubCommand(framework.newSingleCommand().setName("hello")
@@ -175,15 +175,30 @@ public class KarFrameworkBukkitBootstrap
                                         throw new RuntimeException(ioException);
                                     }
                                 }).build()
+                        ).registerSubCommand(framework.newSingleCommand().setName("bccapi")
+                                .setExecutor((sender, arguments, sourceArguments) -> {
+                                    sender.sendMessage(
+                                            new TranslatableComponent("addServer.title").toPlainText()
+                                    );
+                                }).build()
                         )
                 )
         );
+        OpenMCLang.preInit();
         reloadConfig();
-
+        Internal.SHUTDOWN_HOOK.set(null);
     }
 
     @Override
     public @Nullable FormatAction getTranslation(@NotNull String key) {
         return delegate.getTranslation(key);
+    }
+
+    @Override
+    public void onDisable() {
+        shutdownHooks.removeIf(it -> {
+            it.run();
+            return true;
+        });
     }
 }

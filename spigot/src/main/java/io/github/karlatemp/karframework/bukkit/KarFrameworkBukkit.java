@@ -13,7 +13,6 @@ import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.command.AbstractCommandFramework;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
-import io.github.karlatemp.karframework.opennbt.INbtProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -72,6 +71,10 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
             if (defaultImplement != null) return defaultImplement;
             throw new RuntimeException(any);
         }
+    }
+
+    public static String getNmsVersion() {
+        return nmsVersion;
     }
 
     KarFrameworkBukkit(@NotNull Translator translator) {

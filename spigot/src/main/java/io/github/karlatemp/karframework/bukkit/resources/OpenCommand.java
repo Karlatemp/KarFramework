@@ -32,6 +32,8 @@ public class OpenCommand {
         ).registerSubCommand(framework.newSingleCommand().setName("info")
                 .setDescription("View all loaded resource packs")
                 .setExecutor((sender, arguments, sourceArguments) -> {
+                    sender.sendMessage("§cServer language: " + DownloadProviders.systemLanguage);
+                    sender.sendMessage("§cConfig language: " + DownloadProviders.language);
                     final List<ZipFile> files = ResourcePackLoader.resourceZipFiles;
                     if (files.isEmpty()) {
                         sender.sendMessage("§cOops. Server not loaded any resource pack.");

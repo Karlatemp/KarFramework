@@ -46,9 +46,9 @@ public /* internal */ class DownloadProviders {
     static final LinkedList<DownloadProvider> providers = new LinkedList<>();
     static final JsonParser JSON_PARSER = new JsonParser();
     static final Map<String, String> hashMapping = new HashMap<>();
-    static final Map<String, JsonObject> languages = new HashMap<>();
-    private static String language, systemLanguage;
-    static JsonObject selectLanguage;
+    static final Map<String, Map<String, String>> languages = new HashMap<>();
+    static String language, systemLanguage;
+    static Map<String, String> selectLanguage;
     static File objects;
 
 
@@ -124,7 +124,7 @@ public /* internal */ class DownloadProviders {
             if (country != null && country.length() > 0) {
                 lcb.append('_').append(country);
             }
-            language = config.getNode("language").getString(systemLanguage = lcb.toString());
+            language = config.getNode("language").getString(systemLanguage = lcb.toString().toLowerCase());
         }
     }
 
@@ -137,7 +137,7 @@ public /* internal */ class DownloadProviders {
         return false;
     }
 
-    static JsonElement parseFile(File file) throws IOException {
+    static JsonElement parseFile(File file, String alias) throws IOException {
         try (Reader reader = new BufferedReader(new InputStreamReader(
                 new BufferedInputStream(
                         new FileInputStream(file)
@@ -145,7 +145,16 @@ public /* internal */ class DownloadProviders {
                 StandardCharsets.UTF_8
         ))) {
             return JSON_PARSER.parse(reader);
+        } catch (Throwable any) {
+            if (alias != null) {
+                throw new IOException("Exception in parsing " + alias + " - " + file, any);
+            }
+            throw new IOException("Exception in parsing " + file, any);
         }
+    }
+
+    static JsonElement parseFile(File file) throws IOException {
+        return parseFile(file, null);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -358,12 +367,27 @@ public /* internal */ class DownloadProviders {
 
             for (Map.Entry<String, String> entry : hashMapping.entrySet()) {
                 File file = new File(objects, entry.getValue());
-                languages.put(entry.getKey(), parseFile(file).getAsJsonObject());
+                HashMap<String, String> hashMap = new HashMap<>();
+                if (entry.getKey().endsWith(".lang")) {
+                    Properties prop = new Properties();
+                    try (Reader fr = Files.newReader(file, StandardCharsets.UTF_8)) {
+                        prop.load(fr);
+                    }
+                    for (Map.Entry<Object, Object> entryZ : prop.entrySet()) {
+                        hashMap.put(String.valueOf(entryZ.getKey()), String.valueOf(entryZ.getValue()));
+                    }
+                } else {
+                    for (Map.Entry<String, JsonElement> entryZ : parseFile(file, entry.getKey()).getAsJsonObject().entrySet()) {
+                        hashMap.put(entryZ.getKey(), entryZ.getValue().getAsString());
+                    }
+                }
+                languages.put(entry.getKey(), hashMap);
             }
             String l = "minecraft/lang/" + language + ".json";
+            String l2 = "minecraft/lang/" + language + ".lang";
             if ((selectLanguage = languages.entrySet()
                     .stream()
-                    .filter(it -> it.getKey().equalsIgnoreCase(l))
+                    .filter(it -> it.getKey().equalsIgnoreCase(l) || it.getKey().equalsIgnoreCase(l2))
                     .findFirst()
                     .map(Map.Entry::getValue)
                     .orElse(null)) == null) {

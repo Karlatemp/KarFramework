@@ -51,6 +51,9 @@ subprojects {
             compile "org.spongepowered:configurate-gson:$configurationVersion"
             compile "org.spongepowered:configurate-yaml:$configurationVersion"
 
+            compile rootProject.fileTree('libs')
+
+
             def gversion = '3.0.5'
             def igroovy = { vec ->
                 if (vec == '') {
@@ -107,6 +110,9 @@ shadowJar {
         println('-> ' + dep.moduleGroup + ':' + dep.moduleName)
         return false
     }
+    relocate 'cn.mcres.karlatemp.unsafe', 'io.github.karframework.unsafe'
+    relocate 'cn.mcres.karlatemp.mxlib.Java9ToJava8', 'io.github.karframework.internal.j9to8'
+
 }
 
 ({
@@ -116,6 +122,8 @@ shadowJar {
     task.dependencyFilter.exclude {
         return it.moduleGroup != project.group.toString()
     }
+    task.relocate 'cn.mcres.karlatemp.unsafe', 'io.github.karlatemp.karframework.unsafe'
+    task.relocate 'cn.mcres.karlatemp.mxlib.Java9ToJava8', 'io.github.karlatemp.karframework.internal.j9to8'
 })()
 
 task rebuildAll(dependsOn: ['clean', 'shadowJar', 'shadowReleaseJar'])
