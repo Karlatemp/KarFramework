@@ -86,6 +86,10 @@ public abstract class FormatAction {
                 builder.append(arguments[slot]);
             } else toString(builder);
         }
+
+        public int getSlot() {
+            return slot;
+        }
     }
 
     public static class LinkedActions extends FormatAction {
@@ -97,6 +101,10 @@ public abstract class FormatAction {
 
         public LinkedActions(@NotNull FormatAction[] actions) {
             this(Arrays.asList(actions));
+        }
+
+        public Iterable<FormatAction> getActions() {
+            return actions;
         }
 
         @Override

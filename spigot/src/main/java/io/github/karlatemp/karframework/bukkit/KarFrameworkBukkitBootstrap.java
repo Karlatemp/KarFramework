@@ -19,6 +19,8 @@ import io.github.karlatemp.karframework.command.InterruptCommand;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
 import io.github.karlatemp.karframework.groovy.GroovyScriptManager;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -183,6 +185,41 @@ public class KarFrameworkBukkitBootstrap
                                 .setExecutor((sender, arguments, sourceArguments) -> {
                                     sender.sendMessage(
                                             new TranslatableComponent("addServer.title").toPlainText()
+                                    );
+                                }).build()
+                        ).registerSubCommand(framework.newSingleCommand().setName("format")
+                                .setExecutor((sender, arguments, sourceArguments) -> {
+                                    sender.spigot().sendMessage(
+                                            BaseComponentFormatAction.parse(FormatAction.parse(
+                                                    "prev{0}suffix"
+                                            )).apply(new Object[]{
+                                                    new ComponentBuilder("Hello").color(ChatColor.RED)
+                                            })
+                                    );
+                                    sender.spigot().sendMessage(
+                                            BaseComponentFormatAction.parse(FormatAction.parse(
+                                                    "prev{0}suffix{1}null"
+                                            )).apply(new Object[]{
+                                                    new ComponentBuilder("Hello").color(ChatColor.RED)
+                                            })
+                                    );
+                                    sender.spigot().sendMessage(
+                                            BaseComponentFormatAction.parse(FormatAction.parse(
+                                                    "prev{0}suffix{1}"
+                                            )).apply(new Object[]{
+                                                    new ComponentBuilder("Hello").color(ChatColor.RED),
+                                                    new ComponentBuilder("World").color(ChatColor.RED)
+                                            })
+                                    );
+                                    sender.spigot().sendMessage(
+                                            BaseComponentFormatAction.parse(FormatAction.parse(
+                                                    "mut{0}suffix"
+                                            )).apply(new Object[]{
+                                                    new ComponentBuilder("Hello")
+                                                            .color(ChatColor.AQUA)
+                                                            .append("World").color(ChatColor.RED)
+                                                            .create()
+                                            })
                                     );
                                 }).build()
                         )
