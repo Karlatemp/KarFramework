@@ -26,6 +26,10 @@ import java.util.logging.Logger;
 public class BukkitPluginProvider implements IPluginProvider {
     private final Plugin plugin;
 
+    public Plugin getPlugin() {
+        return plugin;
+    }
+
     public BukkitPluginProvider(@NotNull Plugin plugin) {
         this.plugin = plugin;
     }
