@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -87,6 +88,15 @@ public class KarFrameworkBukkitBootstrap
 
     @Override
     public void onEnable() {
+        if (System.getProperty("karframework.debug") != null) {
+            try {
+                //noinspection unchecked
+                ((Consumer<IPluginProvider>) Class.forName("io.github.karlatemp.karframework.internal.KotlinCodeTest")
+                        .getField("INSTANCE").get(null)).accept(provider);
+            } catch (Throwable excep) {
+                getLogger().log(Level.WARNING, "DEBUG", excep);
+            }
+        }
         // region Initialize commands
         Internal.SHUTDOWN_HOOK.set(shutdownHooks);
         KarFrameworkBukkit framework = KarFrameworkBukkit.getInstance();

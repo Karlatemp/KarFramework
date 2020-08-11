@@ -11,7 +11,6 @@
 package io.github.karlatemp.karframework
 
 import io.github.karlatemp.karframework.bukkit.BukkitPluginProvider
-import org.bukkit.Bukkit
 import org.bukkit.event.EventPriority
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
@@ -25,7 +24,7 @@ private val eventProviders = run {
         val eventClass = Class.forName("org.bukkit.event.Event")
         result.add { provider, klass ->
             if (provider is BukkitPluginProvider) {
-                if (klass.isAssignableFrom(eventClass)) {
+                if (eventClass.isAssignableFrom(klass)) {
                     val handlers = runCatching {
                         klass.getMethod("getHandlerList").apply {
                             isAccessible = true
@@ -73,6 +72,7 @@ internal fun <T> IPluginProvider.registerEventListener(
         val provider = factory.invoke(this, klass) ?: return@forEach
         @Suppress("UNCHECKED_CAST")
         provider(executor as (Any) -> Unit, eventPriority, ignoreCancelled)
+        return
     }
     error("No any provider match.")
 }
