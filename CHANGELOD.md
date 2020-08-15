@@ -1,3 +1,7 @@
+# 1.4.2
+
+- Fix message rendering error.
+- 2020/08/15
 # 1.4.1
 
 - NBT Framework: Supported 1.16.2

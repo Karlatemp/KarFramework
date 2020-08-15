@@ -31,11 +31,11 @@ repositories {
 
 ```groovy
 dependencies {
-    compile 'io.github.karlatemp.kar-framework:kar-framework:1.4.1'
+    compile 'io.github.karlatemp.kar-framework:kar-framework:1.4.2'
 }
 ```
 
-最后一个版本为: `1.4.1`
+最后一个版本为: `1.4.2`
 
 ## 命令树
 
