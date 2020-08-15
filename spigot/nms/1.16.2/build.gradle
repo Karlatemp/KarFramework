@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
+ * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
+ * @create 2020/08/15 11:30:10
+ *
+ * kar-framework/kar-framework.spigot/build.gradle
+ */
+
+plugins {
+    id 'java'
+}
+
+dependencies {
+    compile project(':common')
+    compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot:1.16.2-R0.1-SNAPSHOT'
+}
