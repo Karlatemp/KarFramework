@@ -1,3 +1,9 @@
+# 1.4.1
+
+- NBT Framework: Supported 1.16.2
+- New: `BaseComponentFormatAction`
+- 2020/08/15
+
 # 1.4.0
 
 - Hello Groovy
