@@ -41,7 +41,7 @@ public class OpenCommand {
                         final FormatAction.LinkedActions parse = FormatAction.parse(" - §b{0}");
                         String[] sw = new String[1];
 
-                        for (int start = files.size() - 1; start > 0; ) {
+                        for (int start = files.size() - 1; start > -1; ) {
                             ZipFile zipFile = files.get(start--);
                             String fileName = zipFile.getName().replace('\\', '/');
                             {
