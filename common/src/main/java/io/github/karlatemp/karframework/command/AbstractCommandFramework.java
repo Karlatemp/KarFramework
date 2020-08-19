@@ -111,5 +111,10 @@ public abstract class AbstractCommandFramework<T> implements ICommandFramework<T
         public CommandSingle.@NotNull Builder<T> newSingleCommand() {
             return parent.newSingleCommand();
         }
+
+        @Override
+        public CommandTree.@NotNull Builder<T> newCommandTree() {
+            return parent.newCommandTree();
+        }
     }
 }

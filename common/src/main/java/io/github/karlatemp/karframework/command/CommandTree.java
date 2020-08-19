@@ -11,6 +11,7 @@ package io.github.karlatemp.karframework.command;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.internal.ListUtils;
 import io.github.karlatemp.karframework.internal.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -21,6 +22,56 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CommandTree<T> implements ICommandNode<T> {
+    public static @NotNull Builder<?> builder() {
+        return new Builder<>();
+    }
+
+    public static @NotNull <T> Builder<T> builder(@NotNull ICommandFramework<T> framework) {
+        return builder().framework(framework);
+    }
+
+    public static class Builder<T> {
+        private String name;
+        private ICommandFramework<T> framework;
+        private String permission;
+        private String description;
+        private boolean openDistances;
+
+        @SuppressWarnings("unchecked")
+        public @NotNull <V> Builder<V> framework(ICommandFramework<V> framework) {
+            Builder<V> v = (Builder<V>) this;
+            v.framework = framework;
+            return v;
+        }
+
+        public @NotNull Builder<T> name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public @NotNull Builder<T> permission(String permission) {
+            this.permission = permission;
+            return this;
+        }
+
+        public @NotNull Builder<T> description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public @NotNull Builder<T> openDistances(boolean openDistances) {
+            this.openDistances = openDistances;
+            return this;
+        }
+
+        public @NotNull CommandTree<T> build() {
+            Validate.notNull(name, "`name` cannot be null.");
+            Validate.notNull(framework, "`framework` cannot be null.");
+            return new CommandTree<>(framework, name, description, permission,
+                    new HashMap<>(), new HashMap<>(), openDistances);
+        }
+    }
+
     private final String name;
     private final ICommandFramework<T> framework;
     private final String permission;

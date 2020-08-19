@@ -32,4 +32,8 @@ public interface ICommandFramework<T> {
     default @NotNull CommandSingle.Builder<T> newSingleCommand() {
         return CommandSingle.builder().setFramework(this);
     }
+
+    default @NotNull CommandTree.Builder<T> newCommandTree() {
+        return CommandTree.builder(this);
+    }
 }

@@ -8,6 +8,8 @@
 
 package io.github.karlatemp.karframework;
 
+import io.github.karlatemp.karframework.services.IServicesTable;
+import io.github.karlatemp.karframework.services.SimpleServicesTable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +17,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class KarFramework {
     private static final AtomicReference<IKarFramework> INSTANCE = new AtomicReference<>();
+    private static final IServicesTable SERVICES_TABLE = new SimpleServicesTable();
+
+    public static IServicesTable getSharedServicesTable() {
+        return SERVICES_TABLE;
+    }
 
     public static void setInstance(IKarFramework framework) {
         if (!INSTANCE.compareAndSet(null, framework)) {

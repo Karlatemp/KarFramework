@@ -77,4 +77,12 @@ public interface IPluginProvider {
             getLogger().log(Level.SEVERE, "Exception in saving " + path, ioe);
         }
     }
+
+    default @Nullable File getPluginFile() {
+        return null;
+    }
+
+    default @Nullable ClassLoader getClassLoader() {
+        return null;
+    }
 }

@@ -10,6 +10,7 @@ package io.github.karlatemp.karframework.bukkit;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
+import com.google.gson.Gson;
 import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.KarFramework;
 import io.github.karlatemp.karframework.bukkit.internal.Internal;
@@ -19,6 +20,9 @@ import io.github.karlatemp.karframework.command.InterruptCommand;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
 import io.github.karlatemp.karframework.groovy.GroovyScriptManager;
+import io.github.karlatemp.karframework.services.IServiceRegister;
+import io.github.karlatemp.karframework.services.IServicesTable;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TranslatableComponent;
@@ -26,6 +30,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -100,6 +105,7 @@ public class KarFrameworkBukkitBootstrap
         // region Initialize commands
         Internal.SHUTDOWN_HOOK.set(shutdownHooks);
         KarFrameworkBukkit framework = KarFrameworkBukkit.getInstance();
+        // region Command
         provider.provideCommand("karframework", new CommandTree<>(framework, "<ROOT>", null, "karframework.command.use")
                 .registerSubCommand(framework.newSingleCommand().setName("hello")
                         .setDescription("Hello World!")
@@ -232,9 +238,32 @@ public class KarFrameworkBukkitBootstrap
                                             })
                                     );
                                 }).build()
+                        ).registerSubCommand(framework.newSingleCommand().setName("dump-json")
+                                .setExecutor((sender, arguments, sourceArguments) -> {
+                                    if (arguments.isEmpty()) {
+                                        sender.sendMessage("Missing language.");
+                                        throw InterruptCommand.INSTANCE;
+                                    }
+                                    String lang = arguments.peek();
+                                    Map<String, String> data = ExternalLanguages.getLanguage(lang);
+                                    if (data == null) {
+                                        sender.sendMessage("Language " + arguments.peek() + " not found.");
+                                        throw InterruptCommand.INSTANCE;
+                                    }
+                                    final File file = new File(provider.getPluginDataFolder(), "lang-" + lang + ".json");
+                                    try {
+                                        Files.createParentDirs(file);
+                                        try (Writer writer = Files.newWriter(file, StandardCharsets.UTF_8)) {
+                                            new Gson().toJson(data, writer);
+                                        }
+                                    } catch (IOException ioException) {
+                                        throw new RuntimeException(ioException);
+                                    }
+                                }).build()
                         )
                 )
         );
+        // endregion
         OpenMCLang.preInit();
         reloadConfig();
         Internal.SHUTDOWN_HOOK.set(null);
@@ -246,6 +275,31 @@ public class KarFrameworkBukkitBootstrap
             manager.loadScript("startup.groovy").execute();
         } catch (Throwable e) {
             getLogger().log(Level.SEVERE, "Exception in executing startup script.", e);
+        }
+        // endregion
+        // region auto service registers
+        IServicesTable sharedServicesTable = KarFramework.getSharedServicesTable();
+        sharedServicesTable.registerService(IServiceRegister.class, service -> {
+            if (service instanceof Listener) {
+                JavaPlugin provider = JavaPlugin.getProvidingPlugin(service.getClass());
+                Bukkit.getPluginManager().registerEvents((Listener) service, provider);
+                return IServiceRegister.ResultType.COMPILED_AND_CONTINUE;
+            }
+            return IServiceRegister.ResultType.SKIPPED;
+        }, null);
+        try {
+            Class.forName("me.clip.placeholderapi.expansion.PlaceholderExpansion");
+            //noinspection Convert2Lambda
+            sharedServicesTable.registerService(IServiceRegister.class, new IServiceRegister() {
+                @Override
+                public @NotNull ResultType register(@NotNull Object service) throws Throwable {
+                    if (service instanceof PlaceholderExpansion) {
+                        ((PlaceholderExpansion) service).register();
+                    }
+                    return ResultType.SKIPPED;
+                }
+            }, null);
+        } catch (Throwable ignored) {
         }
         // endregion
     }

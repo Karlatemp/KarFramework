@@ -10,8 +10,12 @@ plugins {
     id 'java'
 }
 
+repositories {
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
 dependencies {
     compile project(':common')
     compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compile 'net.md-5:bungeecord-chat:1.16-R0.3-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.10.9'
 }

@@ -74,4 +74,9 @@ public class BungeePluginProvider implements IPluginProvider {
         }
         ProxyServer.getInstance().getPluginManager().registerCommand(plugin, new CC());
     }
+
+    @Override
+    public @Nullable ClassLoader getClassLoader() {
+        return plugin.getClass().getClassLoader();
+    }
 }

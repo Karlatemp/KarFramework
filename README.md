@@ -31,11 +31,11 @@ Now, you can use our framework now!
 
 ```groovy
 dependencies {
-    compile 'io.github.karlatemp.kar-framework:kar-framework:1.4.2'
+    compile 'io.github.karlatemp.kar-framework:kar-framework:1.4.3'
 }
 ```
 
-Latest version: `1.4.2`
+Latest version: `1.4.3`
 
 ## Command Node
 

@@ -20,11 +20,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BukkitPluginProvider implements IPluginProvider {
     private final Plugin plugin;
+    private final File pluginFile;
 
     public Plugin getPlugin() {
         return plugin;
@@ -32,6 +36,38 @@ public class BukkitPluginProvider implements IPluginProvider {
 
     public BukkitPluginProvider(@NotNull Plugin plugin) {
         this.plugin = plugin;
+        File pluginFile = null;
+        try {
+            Class<?> scanning = plugin.getClass();
+            do {
+                Method method;
+                try {
+                    method = scanning.getDeclaredMethod("getFile");
+                    if (method.getReturnType() != File.class)
+                        continue;
+                    if (Modifier.isStatic(method.getModifiers()))
+                        continue;
+                    method.setAccessible(true);
+                } catch (Throwable ignored) {
+                    continue;
+                }
+                pluginFile = (File) method.invoke(plugin);
+            } while ((scanning = scanning.getSuperclass()) != null);
+        } catch (Throwable exception) {
+            plugin.getLogger().log(Level.WARNING, "Exception in getting file of " + plugin.getDescription().getName(), exception);
+        }
+        this.pluginFile = pluginFile;
+    }
+
+    @Nullable
+    @Override
+    public File getPluginFile() {
+        return pluginFile;
+    }
+
+    @Override
+    public @Nullable ClassLoader getClassLoader() {
+        return plugin.getClass().getClassLoader();
     }
 
     @Override
