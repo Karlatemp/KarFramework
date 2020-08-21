@@ -48,4 +48,13 @@ public class RegisteredService<T> {
     public void unregister() {
         future.complete(null);
     }
+
+    @Override
+    public String toString() {
+        return "RegisteredService{" +
+                "type=" + type +
+                ", service=" + service +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

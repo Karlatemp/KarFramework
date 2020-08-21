@@ -84,7 +84,7 @@ subprojects {
 afterEvaluate {
     dependencies {
         rootProject.subprojects.each { proj ->
-            if (proj.name != 'groovy') {
+            if (proj.name != 'groovy' && proj.name != 'tester') {
                 implementation proj
             }
         }
@@ -116,6 +116,7 @@ shadowJar {
     }
     relocate 'cn.mcres.karlatemp.unsafe', 'io.github.karlatemp.karframework.unsafe'
     relocate 'cn.mcres.karlatemp.mxlib.Java9ToJava8', 'io.github.karlatemp.karframework.internal.j9to8'
+    relocate 'org.objectweb.asm', 'groovyjarjarasm.asm'
 
 }
 
@@ -128,6 +129,7 @@ shadowJar {
     }
     task.relocate 'cn.mcres.karlatemp.unsafe', 'io.github.karlatemp.karframework.unsafe'
     task.relocate 'cn.mcres.karlatemp.mxlib.Java9ToJava8', 'io.github.karlatemp.karframework.internal.j9to8'
+    task.relocate 'org.objectweb.asm', 'groovyjarjarasm.asm'
 })()
 
 task rebuildAll(dependsOn: ['clean', 'shadowJar', 'shadowReleaseJar'])

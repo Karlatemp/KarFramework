@@ -11,6 +11,7 @@ include(':common')
 include(':spigot')
 include(':groovy')
 include(':kotlin')
+include(':tester')
 
 ({
     def nms = new File(rootProject.projectDir, "spigot/nms")

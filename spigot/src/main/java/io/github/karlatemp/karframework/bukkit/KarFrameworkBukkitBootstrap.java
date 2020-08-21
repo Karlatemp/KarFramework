@@ -11,6 +11,7 @@ package io.github.karlatemp.karframework.bukkit;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import io.github.karlatemp.karframework.IKarFramework;
 import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.KarFramework;
 import io.github.karlatemp.karframework.bukkit.internal.Internal;
@@ -30,7 +31,10 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -301,6 +305,36 @@ public class KarFrameworkBukkitBootstrap
             }, null);
         } catch (Throwable ignored) {
         }
+        sharedServicesTable.registerService(
+                IBukkitNbtProvider.class,
+                KarFrameworkBukkit.getNbtProvider(),
+                "nbt-provider"
+        );
+        sharedServicesTable.registerService(
+                KarFrameworkBukkit.class,
+                KarFrameworkBukkit.getInstance(),
+                null
+        );
+        sharedServicesTable.registerService(
+                IKarFramework.class,
+                KarFrameworkBukkit.getInstance(),
+                null
+        );
+        sharedServicesTable.registerService(
+                CommandMap.class,
+                KarFrameworkBukkit.getNmsProvider().getCommandMap(),
+                null
+        );
+        sharedServicesTable.registerService(
+                PluginManager.class,
+                Bukkit.getPluginManager(),
+                null
+        );
+        sharedServicesTable.registerService(
+                Server.class,
+                Bukkit.getServer(),
+                null
+        );
         // endregion
     }
 

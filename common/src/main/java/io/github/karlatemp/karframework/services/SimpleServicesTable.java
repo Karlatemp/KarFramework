@@ -107,7 +107,7 @@ public class SimpleServicesTable implements IServicesTable {
             return Optional.ofNullable(services.peek());
         }
         for (RegisteredService<T> serviceX : services) {
-            if (name.equals(service.getName())) {
+            if (name.equals(serviceX.getName())) {
                 return Optional.of(serviceX);
             }
         }

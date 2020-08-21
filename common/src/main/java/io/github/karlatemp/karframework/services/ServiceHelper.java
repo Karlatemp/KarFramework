@@ -8,6 +8,7 @@
 
 package io.github.karlatemp.karframework.services;
 
+import cn.mcres.karlatemp.unsafe.AccessToolkit;
 import groovyjarjarasm.asm.AnnotationVisitor;
 import groovyjarjarasm.asm.ClassReader;
 import groovyjarjarasm.asm.ClassVisitor;
@@ -132,7 +133,7 @@ public class ServiceHelper {
                     return constructor.newInstance(args);
                 }
 
-                List<Object> autoRegister = new ArrayList<>();
+                final List<Object> autoRegister = new ArrayList<>();
 
                 @SuppressWarnings({"unchecked", "rawtypes"})
                 void load(RequireTree tree) throws Exception {
@@ -162,7 +163,7 @@ public class ServiceHelper {
                                 constructor = dyn;
                             }
                         }
-                        constructor.setAccessible(true);
+                        AccessToolkit.setAccessible(constructor, true);
                     }
                     Object service = allocate(constructor);
                     {
@@ -178,6 +179,7 @@ public class ServiceHelper {
                                     if (trees != null) {
                                         for (RequireTree t : trees) load(t);
                                     }
+                                    AccessToolkit.setAccessible(field, true);
                                     field.set(service, servicesTable.findService(
                                             type, name
                                     ).orElse(null));

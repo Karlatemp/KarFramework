@@ -1,0 +1,6 @@
+name: KarFrameworkTester
+main: io.github.karlatemp.karframework.tester.KTester
+version: '1.0'
+author: Karlatemp
+depend:
+  - KarFramework

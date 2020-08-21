@@ -1,0 +1,18 @@
+/*
+ * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
+ * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
+ * @create 2020/08/21 12:45:44
+ *
+ * kar-framework/kar-framework/build.gradle
+ */
+
+plugins {
+    id('java')
+}
+
+dependencies {
+    compile project(':common')
+    compile project(':spigot')
+    compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
+}
