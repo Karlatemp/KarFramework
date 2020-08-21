@@ -8,27 +8,7 @@
 
 package io.github.karlatemp.karframework.tester;
 
-import io.github.karlatemp.karframework.IPluginProvider;
-import io.github.karlatemp.karframework.KarFramework;
-import io.github.karlatemp.karframework.bukkit.KarFrameworkBukkit;
-import io.github.karlatemp.karframework.services.RegisteredService;
-import io.github.karlatemp.karframework.services.ServiceHelper;
-import org.bukkit.plugin.java.JavaPlugin;
+import io.github.karlatemp.karframework.bukkit.KarFrameworkBukkitPlugin;
 
-public class KTester extends JavaPlugin {
-    private IPluginProvider provider;
-
-    @Override
-    public void onLoad() {
-        provider = KarFrameworkBukkit.getInstance().provide(this);
-    }
-
-    @Override
-    public void onEnable() {
-        ServiceHelper.register(provider, KarFramework.getSharedServicesTable());
-        Iterable<RegisteredService<ITestingService>> registeredServices = KarFramework.getSharedServicesTable().findServices(ITestingService.class);
-        for (RegisteredService<ITestingService> rs : registeredServices) {
-            System.out.println(rs);
-        }
-    }
+public class KTester extends KarFrameworkBukkitPlugin {
 }

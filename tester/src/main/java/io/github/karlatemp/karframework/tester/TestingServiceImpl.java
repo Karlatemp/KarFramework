@@ -23,6 +23,6 @@ public class TestingServiceImpl implements ITestingService {
 
     @Override
     public String toString() {
-        return "TestingServiceImpl{" + commandMap + '}';
+        return "TestingServiceImpl";
     }
 }

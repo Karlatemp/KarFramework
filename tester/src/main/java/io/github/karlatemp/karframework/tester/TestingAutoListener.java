@@ -24,6 +24,8 @@ public class TestingAutoListener implements Listener {
     private ITestingService testingServiceUnknown;
     @Service.KInject()
     private ITestingService testingServiceDefault;
+    @Service.KInject
+    private KTester plugin;
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
@@ -32,5 +34,6 @@ public class TestingAutoListener implements Listener {
         event.getPlayer().sendMessage("S2 = " + testingService2);
         event.getPlayer().sendMessage("Un = " + testingServiceUnknown);
         event.getPlayer().sendMessage("De = " + testingServiceDefault);
+        event.getPlayer().sendMessage("Plugin = " + plugin);
     }
 }

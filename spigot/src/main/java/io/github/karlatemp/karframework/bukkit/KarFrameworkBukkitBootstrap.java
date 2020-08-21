@@ -33,7 +33,10 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -50,10 +53,9 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("UnstableApiUsage")
 public class KarFrameworkBukkitBootstrap
-        extends JavaPlugin
+        extends KarFrameworkBukkitPlugin
         implements Translator {
     private Translator delegate;
-    private IPluginProvider provider;
     private final LinkedList<Runnable> shutdownHooks = new LinkedList<>();
 
     public KarFrameworkBukkitBootstrap() {
@@ -62,8 +64,7 @@ public class KarFrameworkBukkitBootstrap
     }
 
     @Override
-    public void onLoad() {
-        provider = new BukkitPluginProvider(this);
+    protected void onLoad0() {
         ConfigurationNode translate = provider.loadConfiguration(
                 Objects.requireNonNull(
                         provider.loadConfiguration("karframework/translate.conf", "translate.conf")
@@ -96,7 +97,7 @@ public class KarFrameworkBukkitBootstrap
     }
 
     @Override
-    public void onEnable() {
+    protected void onEnable0() {
         if (System.getProperty("karframework.debug") != null) {
             try {
                 //noinspection unchecked
@@ -335,7 +336,31 @@ public class KarFrameworkBukkitBootstrap
                 Bukkit.getServer(),
                 null
         );
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            private void a(Plugin plugin) {
+                if (!sharedServicesTable.hasService(plugin.getClass())) {
+                    sharedServicesTable.registerService((Class) plugin.getClass(), plugin, null);
+                }
+            }
+
+            {
+                for (Plugin p : Bukkit.getPluginManager().getPlugins()) {
+                    a(p);
+                }
+            }
+
+            @EventHandler
+            public void a(PluginEnableEvent event) {
+                a(event.getPlugin());
+            }
+        }, this);
         // endregion
+    }
+
+    @Override
+    protected void postEnable() {
+        // Clear default post.
     }
 
     @Override
