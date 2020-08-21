@@ -8,6 +8,8 @@
 
 package io.github.karlatemp.karframework.services;
 
+import com.google.common.annotations.Beta;
+import com.google.common.io.Files;
 import org.jetbrains.annotations.*;
 
 import java.util.Optional;
@@ -25,6 +27,7 @@ public interface IServicesTable {
     @NotNull @Unmodifiable @UnmodifiableView <T> Iterable<RegisteredService<T>> findServices(
             @NotNull Class<T> serviceType
     );
+
     @NotNull @Unmodifiable @UnmodifiableView <T> Iterable<T> findServicesImpl(
             @NotNull Class<T> serviceType
     );
@@ -32,4 +35,9 @@ public interface IServicesTable {
     @NotNull <T> Optional<T> findService(@NotNull Class<T> service, @Nullable String name);
 
     @NotNull <T> Optional<RegisteredService<T>> findRegisteredService(@NotNull Class<T> service, @Nullable String name);
+
+    @Beta
+    default IServicesTable newSubSandbox() {
+        return new SubSandbox(this);
+    }
 }
