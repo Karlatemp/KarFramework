@@ -1,3 +1,7 @@
+# 1.4.3
+- AutoService Framework, examples in tester module
+- 2020/08/22
+
 # 1.4.2
 
 - Fix message rendering error.
