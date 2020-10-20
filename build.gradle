@@ -26,6 +26,7 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        jcenter()
         maven {
             name = 'sponge'
             url = 'https://repo.spongepowered.org/maven'
@@ -37,6 +38,10 @@ allprojects {
         maven {
             name = 'CodeMC - NMS'
             url = 'https://repo.codemc.io/repository/nms/'
+        }
+        maven {
+            name = 'CodeMC - Public'
+            url = 'https://repo.codemc.io/repository/maven-public/'
         }
     }
 }
@@ -53,7 +58,7 @@ subprojects {
             compile "org.spongepowered:configurate-gson:$configurationVersion"
             compile "org.spongepowered:configurate-yaml:$configurationVersion"
 
-            compile rootProject.fileTree('libs')
+            compile "io.github.karlatemp:unsafe-accessor:1.2.0"
 
 
             def gversion = '3.0.5'
@@ -114,8 +119,6 @@ shadowJar {
         println('-> ' + dep.moduleGroup + ':' + dep.moduleName)
         return false
     }
-    relocate 'cn.mcres.karlatemp.unsafe', 'io.github.karlatemp.karframework.unsafe'
-    relocate 'cn.mcres.karlatemp.mxlib.Java9ToJava8', 'io.github.karlatemp.karframework.internal.j9to8'
     relocate 'org.objectweb.asm', 'groovyjarjarasm.asm'
 
 }
@@ -127,8 +130,6 @@ shadowJar {
     task.dependencyFilter.exclude {
         return it.moduleGroup != project.group.toString()
     }
-    task.relocate 'cn.mcres.karlatemp.unsafe', 'io.github.karlatemp.karframework.unsafe'
-    task.relocate 'cn.mcres.karlatemp.mxlib.Java9ToJava8', 'io.github.karlatemp.karframework.internal.j9to8'
     task.relocate 'org.objectweb.asm', 'groovyjarjarasm.asm'
 })()
 

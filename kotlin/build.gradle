@@ -8,7 +8,7 @@
 
 plugins {
     id('java')
-    id "org.jetbrains.kotlin.jvm" version "1.4.0-rc"
+    id "org.jetbrains.kotlin.jvm" version "1.4.10"
 }
 
 dependencies {
@@ -17,5 +17,5 @@ dependencies {
     compile project(':spigot')
     compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
-    compileOnly group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.4.0-rc'
+    compileOnly group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.4.10'
 }

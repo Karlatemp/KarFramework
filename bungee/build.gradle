@@ -12,5 +12,6 @@ plugins {
 
 dependencies {
     compile project(':common')
-    compile 'net.md-5:bungeecord-api:1.16-R0.3-SNAPSHOT'
+    compile 'net.md-5:bungeecord-api:1.16-R0.3'
+    compile 'net.md-5:bungeecord-proxy:1.16-R0.3-SNAPSHOT'
 }

@@ -8,11 +8,11 @@
 
 package io.github.karlatemp.karframework.bukkit.resources;
 
-import cn.mcres.karlatemp.unsafe.Unsafe;
 import io.github.karlatemp.karframework.bukkit.KarFrameworkBukkit;
 import io.github.karlatemp.karframework.bukkit.internal.Internal;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.utils.EnumerationIterator;
+import io.github.karlatemp.unsafeaccessor.Unsafe;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.chat.TranslationRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
