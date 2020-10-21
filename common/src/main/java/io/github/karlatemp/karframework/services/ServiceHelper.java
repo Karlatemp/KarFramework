@@ -8,7 +8,6 @@
 
 package io.github.karlatemp.karframework.services;
 
-import cn.mcres.karlatemp.unsafe.AccessToolkit;
 import groovyjarjarasm.asm.AnnotationVisitor;
 import groovyjarjarasm.asm.ClassReader;
 import groovyjarjarasm.asm.ClassVisitor;
@@ -16,6 +15,7 @@ import groovyjarjarasm.asm.Opcodes;
 import groovyjarjarasm.asm.tree.ClassNode;
 import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.annotation.Service;
+import io.github.karlatemp.unsafeaccessor.Root;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -163,7 +163,7 @@ public class ServiceHelper {
                                 constructor = dyn;
                             }
                         }
-                        AccessToolkit.setAccessible(constructor, true);
+                        Root.setAccessible(constructor, true);
                     }
                     Object service = allocate(constructor);
                     {
@@ -179,7 +179,7 @@ public class ServiceHelper {
                                     if (trees != null) {
                                         for (RequireTree t : trees) load(t);
                                     }
-                                    AccessToolkit.setAccessible(field, true);
+                                    Root.setAccessible(field, true);
                                     field.set(service, servicesTable.findService(
                                             type, name
                                     ).orElse(null));

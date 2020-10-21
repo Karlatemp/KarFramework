@@ -10,15 +10,19 @@ package io.github.karlatemp.karframework.bukkit;
 
 import io.github.karlatemp.karframework.IKarFramework;
 import io.github.karlatemp.karframework.IPluginProvider;
+import io.github.karlatemp.karframework.annotation.InternalAPI;
 import io.github.karlatemp.karframework.command.AbstractCommandFramework;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
+import io.github.karlatemp.karframework.internal.resources.IMinecraftFramework;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.logging.Logger;
 
 public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> implements IKarFramework {
     static KarFrameworkBukkit INSTANCE;
@@ -81,7 +85,6 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
         super(translator);
     }
 
-    @SuppressWarnings("unused")
     public static KarFrameworkBukkit getInstance() {
         return INSTANCE;
     }
@@ -112,5 +115,33 @@ public class KarFrameworkBukkit extends AbstractCommandFramework<CommandSender> 
     @Override
     public @NotNull String getName(@NotNull CommandSender target) {
         return target.getName();
+    }
+
+    @InternalAPI
+    private static IMinecraftFramework minecraftFramework() {
+        return new IMinecraftFramework() {
+            @Override
+            public String getMinecraftVersion() {
+                return getNmsProvider().getVersion();
+            }
+
+            @Override
+            public boolean isBukkit() {
+                return true;
+            }
+
+            @Override
+            public String getNmsVersion() {
+                return KarFrameworkBukkit.getNmsVersion();
+            }
+
+            private final KarFrameworkBukkitBootstrap bootstrap = KarFrameworkBukkitBootstrap.getPlugin(KarFrameworkBukkitBootstrap.class);
+
+            @Override
+            public Logger getLogger() {
+                return bootstrap.getLogger();
+            }
+
+        };
     }
 }

@@ -8,10 +8,10 @@
 
 package io.github.karlatemp.karframework.bukkit;
 
-import cn.mcres.karlatemp.unsafe.Unsafe;
 import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.KarFramework;
 import io.github.karlatemp.karframework.services.ServiceHelper;
+import io.github.karlatemp.unsafeaccessor.Unsafe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 

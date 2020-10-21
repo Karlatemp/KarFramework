@@ -8,9 +8,9 @@
 
 package io.github.karlatemp.karframework.groovy;
 
-import cn.mcres.karlatemp.unsafe.Unsafe;
 import io.github.karlatemp.karframework.IKarFramework;
 import io.github.karlatemp.karframework.IPluginProvider;
+import io.github.karlatemp.unsafeaccessor.Unsafe;
 import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import org.jetbrains.annotations.NotNull;
 

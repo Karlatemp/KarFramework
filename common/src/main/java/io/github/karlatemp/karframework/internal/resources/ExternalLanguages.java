@@ -1,18 +1,19 @@
 /*
  * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
  * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
- * @create 2020/08/06 13:27:10
+ * @create 2020/10/21 05:34:19
  *
- * kar-framework/kar-framework.spigot.main/ExternalLanguages.java
+ * kar-framework/kar-framework.common.main/ExternalLanguages.java
  */
 
-package io.github.karlatemp.karframework.bukkit.resources;
+package io.github.karlatemp.karframework.internal.resources;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.karlatemp.karframework.IPluginProvider;
-import io.github.karlatemp.karframework.bukkit.internal.Internal;
+import io.github.karlatemp.karframework.annotation.InternalAPI;
+import io.github.karlatemp.karframework.internal.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +32,7 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+@InternalAPI
 public class ExternalLanguages {
     private static final Map<String, CompletableFuture<Map<String, String>>> resources = new ConcurrentHashMap<>();
     static IPluginProvider pprovider;

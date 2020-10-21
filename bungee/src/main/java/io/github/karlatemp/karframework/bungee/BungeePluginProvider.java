@@ -56,7 +56,7 @@ public class BungeePluginProvider implements IPluginProvider {
         @SuppressWarnings("unchecked") ICommandNode<CommandSender> node0 = (ICommandNode<CommandSender>) node;
         class CC extends Command implements TabExecutor {
             public CC() {
-                super(node.getName().toLowerCase(Locale.ENGLISH),
+                super(name.toLowerCase(Locale.ENGLISH),
                         node.getPermission(),
                         (plugin.getDescription().getName() + ":" + node.getName()).toLowerCase(Locale.ENGLISH)
                 );

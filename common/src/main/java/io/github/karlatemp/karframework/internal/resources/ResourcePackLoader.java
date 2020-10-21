@@ -1,17 +1,18 @@
 /*
  * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
  * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
- * @create 2020/08/06 12:51:13
+ * @create 2020/10/21 05:34:19
  *
- * kar-framework/kar-framework.spigot.main/ResourcePackLoader.java
+ * kar-framework/kar-framework.common.main/ResourcePackLoader.java
  */
 
-package io.github.karlatemp.karframework.bukkit.resources;
+package io.github.karlatemp.karframework.internal.resources;
 
 import com.google.common.io.Files;
 import io.github.karlatemp.karframework.IPluginProvider;
+import io.github.karlatemp.karframework.annotation.InternalAPI;
 import io.github.karlatemp.karframework.annotation.Warning;
-import io.github.karlatemp.karframework.bukkit.internal.Internal;
+import io.github.karlatemp.karframework.internal.Internal;
 import ninja.leaping.configurate.ValueType;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -27,6 +28,7 @@ import java.util.zip.ZipFile;
         "This class will be CHANGE/REMOVE ANYTIME!",
         "DONT use this anywhere."
 })
+@InternalAPI
 public /*internal*/ class ResourcePackLoader {
     static File resourcePacksLocation;
     static List<File> resourcePacks;

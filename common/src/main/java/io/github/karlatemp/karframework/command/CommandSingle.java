@@ -8,7 +8,7 @@
 
 package io.github.karlatemp.karframework.command;
 
-import org.apache.commons.lang.Validate;
+import io.github.karlatemp.karframework.utils.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;

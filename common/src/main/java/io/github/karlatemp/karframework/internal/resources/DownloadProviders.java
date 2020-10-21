@@ -1,21 +1,21 @@
 /*
  * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
  * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
- * @create 2020/08/05 19:51:12
+ * @create 2020/10/21 05:34:19
  *
- * kar-framework/kar-framework.spigot.main/DownloadProviders.java
+ * kar-framework/kar-framework.common.main/DownloadProviders.java
  */
 
-package io.github.karlatemp.karframework.bukkit.resources;
+package io.github.karlatemp.karframework.internal.resources;
 
 import com.google.common.io.Files;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.karlatemp.karframework.IPluginProvider;
+import io.github.karlatemp.karframework.annotation.InternalAPI;
 import io.github.karlatemp.karframework.annotation.Warning;
-import io.github.karlatemp.karframework.bukkit.KarFrameworkBukkit;
-import io.github.karlatemp.karframework.bukkit.internal.Internal;
+import io.github.karlatemp.karframework.internal.Internal;
 import io.github.karlatemp.karframework.io.OpenByteArrayOutputStream;
 import io.github.karlatemp.karframework.io.RandomAccessFileInputStream;
 import io.github.karlatemp.karframework.io.RandomAccessFileOutputStream;
@@ -42,6 +42,7 @@ import java.util.logging.Logger;
         "This class will be CHANGE/REMOVE ANYTIME!",
         "DONT use this anywhere."
 })
+@InternalAPI
 public /* internal */ class DownloadProviders {
     static final LinkedList<DownloadProvider> providers = new LinkedList<>();
     static final JsonParser JSON_PARSER = new JsonParser();
@@ -159,6 +160,8 @@ public /* internal */ class DownloadProviders {
 
     @SuppressWarnings("UnstableApiUsage")
     public /* internal */ static void init() {
+        String verx = MinecraftFramework.minecraftFramework.getMinecraftVersion();
+
         IPluginProvider pprovider = Internal.PLUGIN_PROVIDER.get();
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(3, new ThreadFactory() {
             private final AtomicInteger counter = new AtomicInteger();
@@ -203,7 +206,13 @@ public /* internal */ class DownloadProviders {
                             instance.update(buffer, 0, len);
                         }
                     }
-                    return vw(toHex(instance.digest())).equalsIgnoreCase(vw(downloadingTask.sha1));
+                    String s1 = vw(toHex(instance.digest()));
+                    String s2 = vw(downloadingTask.sha1);
+                    boolean result = s1.equalsIgnoreCase(s2);
+                    if (!result) {
+                        logger.warning(" ERROR: SHA-1 Not Match. require " + s2 + ", but got " + s1 + ", " + downloadingTask.resName);
+                    }
+                    return result;
                 } catch (Throwable e) {
                     e.printStackTrace();
                     return false;
@@ -228,6 +237,9 @@ public /* internal */ class DownloadProviders {
                             logger.info("OPEN CONNECT " + downloadingTask.url + " - " + downloadingTask.resName);
                             for (DownloadProvider provider : providers) {
                                 final String url = provider.injectURL(downloadingTask.url);
+                                if (!url.equals(downloadingTask.url)) {
+                                    logger.info("        ---- " + url);
+                                }
                                 OpenByteArrayOutputStream data;
                                 try {
                                     data = NetworkUtils.doGetB(NetworkUtils.toURL(url));
@@ -262,7 +274,6 @@ public /* internal */ class DownloadProviders {
             // region downloading version
 
             // Found version file
-            String verx = KarFrameworkBukkit.getNmsProvider().getVersion();
             File version = new File(pprovider.getPluginDataFolder(), "version-" + verx + ".json");
             if (!version.isFile() || !isValidJson(version)) {
                 String versions;

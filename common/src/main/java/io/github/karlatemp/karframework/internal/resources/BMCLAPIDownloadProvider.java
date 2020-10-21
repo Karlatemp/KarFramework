@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
  * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
- * @create 2020/08/05 19:46:41
+ * @create 2020/10/21 05:34:19
  *
- * kar-framework/kar-framework.spigot.main/BMCLAPIDownloadProvider.java
+ * kar-framework/kar-framework.common.main/BMCLAPIDownloadProvider.java
  */
 
-package io.github.karlatemp.karframework.bukkit.resources;
+package io.github.karlatemp.karframework.internal.resources;
 
 /* internal */ class BMCLAPIDownloadProvider implements DownloadProvider {
     private final String apiRoot;

@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2018-2020 Karlatemp. All rights reserved.
  * @author Karlatemp <karlatemp@vip.qq.com> <https://github.com/Karlatemp>
- * @create 2020/08/05 20:01:06
+ * @create 2020/10/21 05:39:39
  *
- * kar-framework/kar-framework.spigot.main/Internal.java
+ * kar-framework/kar-framework.common.main/Internal.java
  */
 
-package io.github.karlatemp.karframework.bukkit.internal;
+package io.github.karlatemp.karframework.internal;
 
 import io.github.karlatemp.karframework.IPluginProvider;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;

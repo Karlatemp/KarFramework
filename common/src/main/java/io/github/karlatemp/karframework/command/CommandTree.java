@@ -11,7 +11,7 @@ package io.github.karlatemp.karframework.command;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.internal.ListUtils;
 import io.github.karlatemp.karframework.internal.StringUtils;
-import org.apache.commons.lang.Validate;
+import io.github.karlatemp.karframework.utils.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;

@@ -14,13 +14,13 @@ import com.google.gson.Gson;
 import io.github.karlatemp.karframework.IKarFramework;
 import io.github.karlatemp.karframework.IPluginProvider;
 import io.github.karlatemp.karframework.KarFramework;
-import io.github.karlatemp.karframework.bukkit.internal.Internal;
-import io.github.karlatemp.karframework.bukkit.resources.*;
 import io.github.karlatemp.karframework.command.CommandTree;
 import io.github.karlatemp.karframework.command.InterruptCommand;
 import io.github.karlatemp.karframework.format.FormatAction;
 import io.github.karlatemp.karframework.format.Translator;
 import io.github.karlatemp.karframework.groovy.GroovyScriptManager;
+import io.github.karlatemp.karframework.internal.Internal;
+import io.github.karlatemp.karframework.internal.resources.*;
 import io.github.karlatemp.karframework.services.IServiceRegister;
 import io.github.karlatemp.karframework.services.IServicesTable;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -156,7 +156,7 @@ public class KarFrameworkBukkitBootstrap
                                     provider.restoreConfiguration(loader, node);
                                     sender.sendMessage("§bResource pack reload compiled.");
                                 })).build()
-                        ).access(OpenCommand::registerResources)
+                        ).access(node -> OpenCommand.registerResources(node, framework))
                 ).registerSubCommand(new CommandTree<>(framework, "test")
                         .registerSubCommand(framework.newSingleCommand().setName("language")
                                 .setExecutor((sender, arguments, sourceArguments) -> {
